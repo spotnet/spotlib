@@ -1,2 +1,3 @@
-# spotlib
-Decentralized usenet community
+# Spotlib
+
+Library for Spotnet
