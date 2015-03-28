@@ -1,0 +1,2 @@
+# spotlib
+Decentralized usenet community
