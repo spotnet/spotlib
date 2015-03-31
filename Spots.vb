@@ -117,10 +117,10 @@ Namespace SpotClient
 
             zErr = ""
 
-			If Not CreateSpot(GoodPoster, GoodTitle, NzbMsgId, NzbSize, GoodURL, ImgMsgId, GoodDesc, bCat, sSubCats, GoodTag, xOut, "spot.sign.bot.nu", SizeX, SizeY, zErr) Then
-				zErr = ("Kan spot niet toevoegen?" & vbCrLf & vbCrLf & "Details: " & zErr)
-				Return False
-			End If
+            If Not sModule.CreateSpot(GoodPoster, GoodTitle, NzbMsgId, NzbSize, GoodURL, ImgMsgId, GoodDesc, bCat, sSubCats, GoodTag, xOut, "spot.sign.bot.nu", SizeX, SizeY, zErr) Then
+                zErr = ("Kan spot niet toevoegen?" & vbCrLf & vbCrLf & "Details: " & zErr)
+                Return False
+            End If
 
             Dim zXML As String = xOut(1)
             Dim zXMLSign As String = SpecialString(xOut(2))
