@@ -603,6 +603,10 @@ Module sModule
 
     End Function
 
+    Private Function GetBinsearch() As String
+        Return "binsearch.net"
+    End Function
+
     Private Function GetNZB(ByVal zPostData As String, ByVal OrgUrl As String, ByRef zError As String) As String
 
         Dim sReturn As String
