@@ -49,9 +49,6 @@
     <MyType>Windows</MyType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Phuse">
-      <HintPath>..\Install\Phuse.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Security" />
     <Reference Include="System.XML" />
@@ -63,9 +60,11 @@
     <Import Include="System.Collections.Generic" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comments.vb" />
-    <Compile Include="Defines.vb" />
-    <Compile Include="Headers.vb" />
+    <Compile Include="Core\Comments.vb" />
+    <Compile Include="Core\Headers.vb" />
+    <Compile Include="Core\NNTP.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="Resources\AssemblyInfo.vb" />
     <Compile Include="Resources\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -76,15 +75,14 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Spots.vb" />
-    <Compile Include="Worker.vb" />
-    <Compile Include="Resources\AssemblyInfo.vb" />
     <Compile Include="Resources\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
     </Compile>
-    <Compile Include="NNTP.vb" />
-    <Compile Include="sModule.vb" />
+    <Compile Include="Core\Spots.vb" />
+    <Compile Include="Core\Worker.vb" />
+    <Compile Include="Utils\Common.vb" />
+    <Compile Include="Utils\Defines.vb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\app.config" />
@@ -104,6 +102,12 @@
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\fusenet\src\Fusenet.csproj">
+      <Project>{abcbd5d0-09a6-45c7-8055-bd04da7b3665}</Project>
+      <Name>Fusenet</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
