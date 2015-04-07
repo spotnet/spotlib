@@ -5,7 +5,10 @@ Imports System.Security
 Imports System.Security.Cryptography
 Imports System.Security.Cryptography.Xml
 
-Namespace SpotClient
+Imports Phuse
+Imports Spotlib.Common
+
+Namespace Spotlib.Core
 
     Public Class Spots
 
@@ -15,7 +18,7 @@ Namespace SpotClient
 
         End Sub
 
-        Public Shared Function CreateSpot(ByVal tPhuse As Phuse.Engine, ByVal Newsgroup As String, ByVal sTitle As String, ByVal sDesc As String, ByVal bCat As Byte, ByVal sSubCats As String, ByVal sUrl As String, ByVal sLanguage As String, ByVal SizeX As Long, ByVal SizeY As Long, ByVal sNZB As String, ByVal sFrom As String, ByVal sTag As String, ByVal sNZBGroup As String, ByVal cRSA As RSACryptoServiceProvider, ByVal sHashMsgID As String, ByVal bImage() As Byte, ByVal bAvatar() As Byte, ByVal SignLocal As Boolean, ByRef Settings As NNTPSettings, ByRef zErr As String) As Boolean
+        Public Shared Function CreateSpot(ByVal tPhuse As Engine, ByVal Newsgroup As String, ByVal sTitle As String, ByVal sDesc As String, ByVal bCat As Byte, ByVal sSubCats As String, ByVal sUrl As String, ByVal sLanguage As String, ByVal SizeX As Long, ByVal SizeY As Long, ByVal sNZB As String, ByVal sFrom As String, ByVal sTag As String, ByVal sNZBGroup As String, ByVal cRSA As RSACryptoServiceProvider, ByVal sHashMsgID As String, ByVal bImage() As Byte, ByVal bAvatar() As Byte, ByVal SignLocal As Boolean, ByRef Settings As NNTPSettings, ByRef zErr As String) As Boolean
 
             sUrl = sUrl.Trim
             sNZB = sNZB.Trim
@@ -117,7 +120,7 @@ Namespace SpotClient
 
             zErr = ""
 
-            If Not sModule.CreateSpot(GoodPoster, GoodTitle, NzbMsgId, NzbSize, GoodURL, ImgMsgId, GoodDesc, bCat, sSubCats, GoodTag, xOut, "spot.sign.bot.nu", SizeX, SizeY, zErr) Then
+            If Not Utils.CreateSpot(GoodPoster, GoodTitle, NzbMsgId, NzbSize, GoodURL, ImgMsgId, GoodDesc, bCat, sSubCats, GoodTag, xOut, "spot.sign.bot.nu", SizeX, SizeY, zErr) Then
                 zErr = ("Kan spot niet toevoegen?" & vbCrLf & vbCrLf & "Details: " & zErr)
                 Return False
             End If
@@ -276,15 +279,15 @@ Namespace SpotClient
             Return PostData(tPhuse, kDesc, zSub, CoodPoster & " <" & CoodPoster.ToLower & "@" & MsgDomain & ">", cGroup, zExtra, "", "", zErr)
 
         End Function
-		
-        Public Shared Function GetSpot(ByVal tPhuse As Phuse.Engine, ByVal Newsgroup As String, ByVal ArticleID As Long, ByVal MessageID As String, ByRef xOut As String, ByRef SpotOut As SpotEx, ByVal xParam As NNTPSettings, ByRef sError As String) As Boolean
 
-            Dim cNNTP As NNTP
+        Public Shared Function GetSpot(ByVal tPhuse As Engine, ByVal Newsgroup As String, ByVal ArticleID As Long, ByVal MessageID As String, ByRef xOut As String, ByRef SpotOut As SpotEx, ByVal xParam As NNTPSettings, ByRef sError As String) As Boolean
+
+            Dim cNNTP As cNNTP
             Dim lRet As Integer = -1
             Dim sOut As String = ""
             Dim sRet As Boolean = False
 
-            cNNTP = New NNTP(tPhuse)
+            cNNTP = New cNNTP(tPhuse)
 
             If ArticleID > 0 Then
 
@@ -482,7 +485,7 @@ Namespace SpotClient
 
         End Function
 
-        Public Shared Function GetNZB(ByVal tPhuse As Phuse.Engine, ByVal Newsgroup As String, ByVal xMsgID As List(Of String), ByRef sxOut As String, ByRef sError As String) As Boolean
+        Public Shared Function GetNZB(ByVal tPhuse As Engine, ByVal Newsgroup As String, ByVal xMsgID As List(Of String), ByRef sxOut As String, ByRef sError As String) As Boolean
 
             Dim bArr() As Byte = Nothing
 
@@ -499,18 +502,18 @@ Namespace SpotClient
 
         End Function
 
-        Public Shared Function GetImage(ByVal tPhuse As Phuse.Engine, ByVal Newsgroup As String, ByVal xMsgID As List(Of String), ByRef sxOut() As Byte, ByRef sError As String) As Boolean
+        Public Shared Function GetImage(ByVal tPhuse As Engine, ByVal Newsgroup As String, ByVal xMsgID As List(Of String), ByRef sxOut() As Byte, ByRef sError As String) As Boolean
 
             Return GetBinary(tPhuse, Newsgroup, xMsgID, sxOut, sError)
 
         End Function
 
-        Public Shared Function TestConnection(ByVal tPhuse As Phuse.Engine, ByVal Newsgroup As String, ByRef sError As String) As Boolean
+        Public Shared Function TestConnection(ByVal tPhuse As Engine, ByVal Newsgroup As String, ByRef sError As String) As Boolean
 
-            Dim cNNTP As NNTP
+            Dim cNNTP As cNNTP
             Dim sRet As Boolean
 
-            cNNTP = New NNTP(tPhuse)
+            cNNTP = New cNNTP(tPhuse)
 
             sRet = cNNTP.SelectGroup(Newsgroup, 0, 0, 0, 0, sError)
 
@@ -520,7 +523,7 @@ Namespace SpotClient
 
         End Function
 
-        Public Shared Function FindSpots(ByVal tPhuse As Phuse.Engine, ByVal xParam As NNTPSettings) As Headers
+        Public Shared Function FindSpots(ByVal tPhuse As Engine, ByVal xParam As NNTPSettings) As Headers
 
             Dim hw As New Headers
 
@@ -530,7 +533,7 @@ Namespace SpotClient
 
         End Function
 
-        Public Shared Function GetComments(ByVal tPhuse As Phuse.Engine, ByVal ArticleIDs As List(Of Long), ByVal xParam As NNTPSettings) As Comments
+        Public Shared Function GetComments(ByVal tPhuse As Engine, ByVal ArticleIDs As List(Of Long), ByVal xParam As NNTPSettings) As Comments
 
             Dim hw As New Comments
 
@@ -540,7 +543,7 @@ Namespace SpotClient
 
         End Function
 
-        Public Shared Function FindComments(ByVal tPhuse As Phuse.Engine, ByVal xParam As NNTPSettings) As Comments
+        Public Shared Function FindComments(ByVal tPhuse As Engine, ByVal xParam As NNTPSettings) As Comments
 
             Dim hw As New Comments
 
