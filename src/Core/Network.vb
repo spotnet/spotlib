@@ -1,7 +1,4 @@
-﻿Imports Phuse
-Imports Fusenet
-
-Namespace Spotlib
+﻿Namespace Spotlib
 
     Public Class cNNTP
 

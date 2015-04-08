@@ -73,11 +73,11 @@
   <ItemGroup>
     <Compile Include="Core\Comments.vb" />
     <Compile Include="Core\Headers.vb" />
-    <Compile Include="Core\NNTP.vb" />
-    <Compile Include="Data\Database.vb" />
-    <Compile Include="Data\Provider.vb" />
-    <Compile Include="Data\Storage.vb" />
-    <Compile Include="Data\View.vb" />
+    <Compile Include="Core\Network.vb" />
+    <Compile Include="Core\Database.vb" />
+    <Compile Include="Core\Provider.vb" />
+    <Compile Include="Core\Storage.vb" />
+    <Compile Include="Core\Utils.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="Resources\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -95,8 +95,7 @@
     </Compile>
     <Compile Include="Core\Spots.vb" />
     <Compile Include="Core\Worker.vb" />
-    <Compile Include="Utils\Common.vb" />
-    <Compile Include="Utils\Defines.vb" />
+    <Compile Include="Core\Protocol.vb" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\app.config" />

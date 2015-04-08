@@ -1,8 +1,7 @@
 ﻿Imports System.Text
-
+Imports System.Data
 Imports System.Data.Common
 Imports System.Data.SQLite
-Imports System.Data
 
 Namespace Spotlib
 
@@ -41,7 +40,7 @@ Namespace Spotlib
         Private Function CheckThread() As Boolean
 
             If (ThreadID <> -1) And (ThreadID <> System.Threading.Thread.CurrentThread.ManagedThreadId()) Then
-                Utils.Foutje("Wrong thread")
+                Spotz.Foutje("Wrong thread")
                 Return False
             End If
 

@@ -207,7 +207,7 @@ Namespace Spotlib
 
                 End If
 
-                WorkLoad = Utils.CreateWork(lFirst, lLast)
+                WorkLoad = Spotz.CreateWork(lFirst, lLast)
                 WorkTotal = WorkLoad.Count
 
                 If WorkTotal < 1 Then
@@ -223,7 +223,7 @@ Namespace Spotlib
                     HeaderX = Nothing
 
                     If MustCancel(asyncOp) Then
-                        iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
+                        iCompleted(zRes, True, Spotz.CancelMSG, asyncOp)
                         Exit Sub
                     End If
 
@@ -270,13 +270,13 @@ Namespace Spotlib
                         If zRes.Count = 0 Then
                             SetP(0, Utils.sIIF(bNew, "Zoeken naar ", "Zoeken naar nieuwe ") & "reacties..." & LastSpeed, asyncOp)
                         Else
-                            SetP(ProgressValue, Utils.FormatLong(zRes.Count) & " " & Utils.sIIF(Not bNew, "nieuwe ", "") & "reacties gevonden" & LastSpeed, asyncOp)
+                            SetP(ProgressValue, Spotz.FormatLong(zRes.Count) & " " & Utils.sIIF(Not bNew, "nieuwe ", "") & "reacties gevonden" & LastSpeed, asyncOp)
                         End If
                         LastP = ProgressValue
                     End If
 
                     If MustCancel(asyncOp) Then
-                        iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
+                        iCompleted(zRes, True, Spotz.CancelMSG, asyncOp)
                         Exit Sub
                     End If
 
@@ -327,13 +327,13 @@ Namespace Spotlib
                 Next
 
                 If MustCancel(asyncOp) Then
-                    iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
+                    iCompleted(zRes, True, Spotz.CancelMSG, asyncOp)
                     Exit Sub
                 End If
 
                 zRes.Reverse()
 
-                SetP(100, Utils.FormatLong(zRes.Count) & " " & Utils.sIIF(Not bNew, "nieuwe ", "") & "reacties gevonden" & LastSpeed, asyncOp)
+                SetP(100, Spotz.FormatLong(zRes.Count) & " " & Utils.sIIF(Not bNew, "nieuwe ", "") & "reacties gevonden" & LastSpeed, asyncOp)
 
                 iCompleted(zRes, False, vbNullString, asyncOp)
 
@@ -375,7 +375,7 @@ Namespace Spotlib
                     End If
 
                     If MustCancel(asyncOp) Then
-                        iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
+                        iCompleted(zRes, True, Spotz.CancelMSG, asyncOp)
                         Exit Sub
                     End If
 
@@ -411,7 +411,7 @@ Namespace Spotlib
                 Next
 
                 If MustCancel(asyncOp) Then
-                    iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
+                    iCompleted(zRes, True, Spotz.CancelMSG, asyncOp)
                     Exit Sub
                 End If
 
@@ -466,7 +466,7 @@ Namespace Spotlib
                     End If
 
                     If UCase(XL(iXL)).StartsWith("MESSAGE-ID: ") Then
-                        KL.MessageID = Utils.MakeMsg(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
+                        KL.MessageID = Spotz.MakeMsg(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
                     End If
 
                     If UCase(XL(iXL)).StartsWith("X-USER-AVATAR: ") Then
@@ -544,10 +544,10 @@ Namespace Spotlib
 
                 If Not xParam.CheckSignatures Then Return KL
 
-                KL.User.ValidSignature = Utils.CheckUserSignature(KL.MessageID, KL.User.Signature, KL.User.Modulus)
+                KL.User.ValidSignature = Spotz.CheckUserSignature(KL.MessageID, KL.User.Signature, KL.User.Modulus)
 
                 If Not KL.User.ValidSignature Then
-                    KL.User.ValidSignature = Utils.CheckUserSignature(KL.MessageID & KL.Body & vbCrLf & KL.From, KL.User.Signature, KL.User.Modulus)
+                    KL.User.ValidSignature = Spotz.CheckUserSignature(KL.MessageID & KL.Body & vbCrLf & KL.From, KL.User.Signature, KL.User.Modulus)
                 End If
 
                 If Not KL.User.ValidSignature Then sError = "Invalid signature" : Return Nothing

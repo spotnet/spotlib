@@ -1,9 +1,9 @@
 ﻿Imports System.Xml
 Imports System.Text
+Imports System.Data.Common
 Imports System.Security.Cryptography
 
 Imports Phuse
-Imports System.Data.Common
 
 Namespace Spotlib
 
@@ -22,8 +22,8 @@ Namespace Spotlib
             sDesc = sDesc.Trim
             sNZBGroup = sNZBGroup.Trim
 
-            sTag = Utils.StripNonAlphaNumericCharacters(sTag.Trim)
-            sSubCats = Utils.StripNonAlphaNumericCharacters(sSubCats.Trim.ToLower)
+            sTag = Utils.StripChars(sTag.Trim)
+            sSubCats = Utils.StripChars(sSubCats.Trim.ToLower)
             sTitle = sTitle.Replace("!!", "").Replace("**", "").Replace("_", " ").Trim
 
             If bCat < 1 Then zErr = "Vul een categorie in!" : Return False
@@ -37,9 +37,9 @@ Namespace Spotlib
             If Not sSubCats.StartsWith("a") Then zErr = "Ongeldige subcategorien!!" : Return False
 
             If Len(sFrom) < 3 Then zErr = "Afzender niet ingevuld!" : Return False
-            If Not Utils.CheckFrom(sFrom) Then zErr = "Afzender ongeldig!" : Return False
+            If Not Spotz.CheckFrom(sFrom) Then zErr = "Afzender ongeldig!" : Return False
             If Len(sFrom) > 22 Then zErr = "Afzender is te lang!" : Return False
-            If sFrom <> Utils.StripNonAlphaNumericCharacters(Trim(sFrom)) Then zErr = "Afzender bevat ongeldige tekens!" : Return False
+            If sFrom <> Utils.StripChars(Trim(sFrom)) Then zErr = "Afzender bevat ongeldige tekens!" : Return False
 
             If sTitle.ToLower.Contains("www.") Then zErr = "URL's mogen niet in de titel voorkomen!" : Return False
             If sTitle.ToLower.Contains("http:/") Then zErr = "URL's mogen niet in de titel voorkomen!" : Return False
@@ -76,14 +76,14 @@ Namespace Spotlib
 
             Dim NzbSize As Long = 0
 
-            If Not Utils.IsNZB(NZBXML, NzbSize) Then zErr = ("Ongeldig NZB bestand!") : Return False
+            If Not Spotz.IsNZB(NZBXML, NzbSize) Then zErr = ("Ongeldig NZB bestand!") : Return False
 
             Dim GoodDesc As String = Microsoft.VisualBasic.Strings.Left(sDesc, 9000).Trim
             Dim zDesc As String = GoodDesc.Replace("[b]", "").Replace("[/b]", "").Replace("[i]", "").Replace("[/i]", "").Replace("[u]", "").Replace("[/u]", "")
             GoodDesc = GoodDesc.Replace(vbCrLf, "[br]").Replace(vbTab, "[tab]")
 
-            Dim GoodPoster As String = Microsoft.VisualBasic.Strings.Left(Utils.StripNonAlphaNumericCharacters(sFrom), 50).Trim.Replace(" ", "")
-            Dim GoodTag As String = Microsoft.VisualBasic.Strings.Left(Utils.StripNonAlphaNumericCharacters(sTag), 100).Trim.Replace("|", "").Replace(";", "").Replace(" ", "")
+            Dim GoodPoster As String = Microsoft.VisualBasic.Strings.Left(Utils.StripChars(sFrom), 50).Trim.Replace(" ", "")
+            Dim GoodTag As String = Microsoft.VisualBasic.Strings.Left(Utils.StripChars(sTag), 100).Trim.Replace("|", "").Replace(";", "").Replace(" ", "")
 
             Dim GoodURL As String = Utils.AddHttp(Microsoft.VisualBasic.Strings.Left(sUrl, 450).Trim.Replace(vbTab, "").Replace(vbCr, "").Replace(vbLf, ""))
             Dim GoodTitle As String = Microsoft.VisualBasic.Strings.Left(sTitle, 450).Trim.Replace(vbTab, "").Replace(vbCr, "").Replace(vbLf, "").Replace("|", "")
@@ -97,7 +97,7 @@ Namespace Spotlib
 
             GoodTitle = GoodTitle.Substring(0, 1).ToUpper & GoodTitle.Substring(1) ' Capitalize first char
 
-            If Not Utils.PostData(tPhuse, Utils.SplitLinesGZIP(Utils.ZipStr(Utils.MakeLatin(NZBXML))), Guid.NewGuid.ToString.Replace("-", ""), GoodPoster & " <" & sMod & "@" & Utils.MsgDomain & ">", sNZBGroup, "", NzbMsgId, "", zErr) Then
+            If Not Spotz.PostData(tPhuse, Utils.SplitLinesGZIP(Utils.ZipStr(Utils.MakeLatin(NZBXML))), Guid.NewGuid.ToString.Replace("-", ""), GoodPoster & " <" & sMod & "@" & Spotz.MsgDomain & ">", sNZBGroup, "", NzbMsgId, "", zErr) Then
                 zErr = ("Kan NZB niet posten?" & vbCrLf & vbCrLf & "Details: " & zErr) : Return False
             End If
 
@@ -111,7 +111,7 @@ Namespace Spotlib
                 zErr = ("Plaatje is te groot!") : Return False
             End If
 
-            If Not Utils.PostData(tPhuse, ImageList, Guid.NewGuid.ToString.Replace("-", ""), GoodPoster & " <" & sMod & "@" & Utils.MsgDomain & ">", sNZBGroup, "", ImgMsgId, "", zErr) Then
+            If Not Spotz.PostData(tPhuse, ImageList, Guid.NewGuid.ToString.Replace("-", ""), GoodPoster & " <" & sMod & "@" & Spotz.MsgDomain & ">", sNZBGroup, "", ImgMsgId, "", zErr) Then
                 zErr = ("Kan plaatje niet posten?" & vbCrLf & vbCrLf & "Details: " & zErr) : Return False
             End If
 
@@ -129,7 +129,7 @@ Namespace Spotlib
             zErr = vbNullString
 
             Dim zExtra As String = Utils.SplitLinesXML(zXML, "X-XML:", 911) & "X-XML-Signature: " & zXMLSign & vbCrLf
-            Dim zSign As String = Utils.CreateUserSignature(Utils.MakeMsg(sHashMsgID), cRSA)
+            Dim zSign As String = Spotz.CreateUserSignature(Spotz.MakeMsg(sHashMsgID), cRSA)
 
             zExtra += "X-User-Key: " & cRSA.ToXmlString(False).Replace(vbTab, "").Replace(vbCrLf, "") & vbCrLf
             zExtra += "X-User-Signature: " & zSign & vbCrLf
@@ -158,7 +158,7 @@ Namespace Spotlib
                 Return False
             End If
 
-            If Not Utils.PostData(tPhuse, Utils.SplitLines(sDesc, True, 911), zTitle, zFrom, Newsgroup, zExtra, "", sHashMsgID, zErr) Then
+            If Not Spotz.PostData(tPhuse, Utils.SplitLines(sDesc, True, 911), zTitle, zFrom, Newsgroup, zExtra, "", sHashMsgID, zErr) Then
                 zErr = ("Kan spot niet posten?" & vbCrLf & vbCrLf & "Details: " & zErr) : Return False
             End If
 
@@ -171,11 +171,11 @@ Namespace Spotlib
             Dim zPost As String = ""
 
             zPost = "cat=" & Str(HCat).Trim & "&"
-            zPost += "sub=" & Utils.StripNonAlphaNumericCharacters(sCat).ToLower & "&"
+            zPost += "sub=" & Utils.StripChars(sCat).ToLower & "&"
             zPost += "title=" & Utils.MakeP(sTitle) & "&"
-            zPost += "from=" & Utils.StripNonAlphaNumericCharacters(sPoster) & "&"
+            zPost += "from=" & Utils.StripChars(sPoster) & "&"
             zPost += "desc=" & Utils.MakeP(sDesc) & "&"
-            zPost += "tag=" & Utils.StripNonAlphaNumericCharacters(sTag) & "&"
+            zPost += "tag=" & Utils.StripChars(sTag) & "&"
             zPost += "msgid=" & Utils.MakeP(sNZB) & "&"
             If Len(sLink) > 0 Then zPost += "link=" & Utils.MakeP(sLink) & "&"
             zPost += "img=" & Utils.MakeP(sImageID) & "&"
@@ -183,7 +183,7 @@ Namespace Spotlib
             zPost += "imgy=" & Str(lImgY).Trim & "&"
             zPost += "size=" & Str(lFileSize).Trim & "&"
 
-            Dim sResult As String = Utils.GetHash(zPost, SignServer, "signxml", zErr)
+            Dim sResult As String = Spotz.GetHash(zPost, SignServer, "signxml", zErr)
 
             If sResult Is Nothing Then Return False
             If sResult.Length < 20 Then zErr = sResult : Return False
@@ -225,8 +225,8 @@ Namespace Spotlib
             If Len(cDesc) > 900 Then zErr = "Reactie is te lang!" : Return False
             If Len(cFrom) < 3 Then zErr = ("Afzender niet ingevuld!") : Return False
             If Len(cFrom) > 22 Then zErr = ("Afzender is te lang!") : Return False
-            If Not Utils.CheckFrom(cFrom) Then zErr = ("Afzender ongeldig!") : Return False
-            If cFrom <> Utils.StripNonAlphaNumericCharacters(cFrom) Then zErr = "Afzender bevat ongeldige tekens!" : Return False
+            If Not Spotz.CheckFrom(cFrom) Then zErr = ("Afzender ongeldig!") : Return False
+            If cFrom <> Utils.StripChars(cFrom) Then zErr = "Afzender bevat ongeldige tekens!" : Return False
 
             If Not bAvatar Is Nothing Then
                 If UBound(bAvatar) > 4000 Then zErr = ("Avatar is te groot!") : Return False
@@ -240,10 +240,10 @@ Namespace Spotlib
             If cRSA.PublicOnly Then zErr = ("RSA sleutel ongeldig!") : Return False
 
             cOrgTitle = cOrgTitle.Replace(vbCrLf, "")
-            cOrgMessageID = Utils.MakeMsg(cOrgMessageID, False)
+            cOrgMessageID = Spotz.MakeMsg(cOrgMessageID, False)
 
             Dim CoodDesc As String = Microsoft.VisualBasic.Strings.Left(cDesc, 999).Trim
-            Dim CoodPoster As String = Microsoft.VisualBasic.Strings.Left(Utils.StripNonAlphaNumericCharacters(cFrom), 22).Trim.Replace(" ", "")
+            Dim CoodPoster As String = Microsoft.VisualBasic.Strings.Left(Utils.StripChars(cFrom), 22).Trim.Replace(" ", "")
 
             Do While CoodDesc.Contains(vbCrLf & vbCrLf & vbCrLf)
                 CoodDesc = CoodDesc.Replace(vbCrLf & vbCrLf & vbCrLf, vbCrLf & vbCrLf)
@@ -262,7 +262,7 @@ Namespace Spotlib
             Dim zSub As String = "Re: " & cOrgTitle
             Dim kDesc As List(Of String) = Utils.SplitLines(CoodDesc, True, 911)
 
-            Dim Sig As String = Utils.CreateUserSignature(Utils.MakeMsg(HashMessageID), cRSA)
+            Dim Sig As String = Spotz.CreateUserSignature(Spotz.MakeMsg(HashMessageID), cRSA)
 
             Dim sExtra As String = "References: <" & cOrgMessageID & ">" & vbCrLf & "X-User-Signature: " & Sig & vbCrLf
             sExtra += "X-User-Key: " & cRSA.ToXmlString(False).Replace(vbTab, "").Replace(vbCrLf, "") & vbCrLf
@@ -274,7 +274,7 @@ Namespace Spotlib
             Dim xOut As String = ""
             Dim sMod As String = Utils.SpecialString(Convert.ToBase64String(cRSA.ExportParameters(False).Modulus))
 
-            If Not Utils.PostData(tPhuse, kDesc, zSub, CoodPoster & " <" & sMod & "." & Sig & "@" & Utils.MsgDomain & ">", cGroup, sExtra, xOut, HashMessageID, zErr) Then
+            If Not Spotz.PostData(tPhuse, kDesc, zSub, CoodPoster & " <" & sMod & "." & Sig & "@" & Spotz.MsgDomain & ">", cGroup, sExtra, xOut, HashMessageID, zErr) Then
                 zErr = ("Kan reactie niet plaatsen?" & vbCrLf & vbCrLf & "Details: " & zErr) : Return False
             End If
 
@@ -295,11 +295,11 @@ Namespace Spotlib
             If Len(cFrom) < 3 Then cFrom = "Afzender"
             If Len(cFrom) > 22 Then zErr = ("Afzender te lang!") : Return False
 
-            cOrgMessageID = Utils.MakeMsg(cOrgMessageID, True)
+            cOrgMessageID = Spotz.MakeMsg(cOrgMessageID, True)
             cOrgTitle = cOrgTitle.Replace(vbCrLf, "")
 
             Dim CoodDesc As String = Microsoft.VisualBasic.Strings.Left(cDesc, 999).Trim
-            Dim CoodPoster As String = Microsoft.VisualBasic.Strings.Left(Utils.StripNonAlphaNumericCharacters(cFrom), 22).Trim.Replace(" ", "")
+            Dim CoodPoster As String = Microsoft.VisualBasic.Strings.Left(Utils.StripChars(cFrom), 22).Trim.Replace(" ", "")
 
             Do While CoodDesc.Contains(vbCrLf & vbCrLf & vbCrLf)
                 CoodDesc = CoodDesc.Replace(vbCrLf & vbCrLf & vbCrLf, vbCrLf & vbCrLf)
@@ -322,7 +322,7 @@ Namespace Spotlib
 
             Dim zExtra As String = "References: " & cOrgMessageID & vbCrLf
 
-            Return Utils.PostData(tPhuse, kDesc, zSub, CoodPoster & " <" & CoodPoster.ToLower & "@" & Utils.MsgDomain & ">", cGroup, zExtra, "", "", zErr)
+            Return Spotz.PostData(tPhuse, kDesc, zSub, CoodPoster & " <" & CoodPoster.ToLower & "@" & Spotz.MsgDomain & ">", cGroup, zExtra, "", "", zErr)
 
         End Function
 
@@ -401,7 +401,7 @@ Namespace Spotlib
                 End If
 
                 If UCase(XL(iXL)).StartsWith("MESSAGE-ID: ") Then
-                    tMsgID = Utils.MakeMsg(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
+                    tMsgID = Spotz.MakeMsg(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
                 End If
 
                 If UCase(XL(iXL)).StartsWith("X-USER-AVATAR: ") Then
@@ -535,7 +535,7 @@ Namespace Spotlib
 
             Dim bArr() As Byte = Nothing
 
-            If Not Utils.GetBinary(tPhuse, Newsgroup, xMsgID, bArr, sError) Then Return False
+            If Not Spotz.GetBinary(tPhuse, Newsgroup, xMsgID, bArr, sError) Then Return False
 
             sxOut = Utils.UnzipStr(bArr)
 
@@ -550,7 +550,7 @@ Namespace Spotlib
 
         Public Shared Function GetImage(ByVal tPhuse As Engine, ByVal Newsgroup As String, ByVal xMsgID As List(Of String), ByRef sxOut() As Byte, ByRef sError As String) As Boolean
 
-            Return Utils.GetBinary(tPhuse, Newsgroup, xMsgID, sxOut, sError)
+            Return Spotz.GetBinary(tPhuse, Newsgroup, xMsgID, sxOut, sError)
 
         End Function
 
@@ -599,7 +599,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Shared Function GetComments(Db As Database, ByVal xMsg As String, ByRef Param As Parameters, ByRef Fetch As FetchCache, ByRef xErr As String) As List(Of Long)
+        Public Shared Function GetComments(Db As Database, ByVal xMsg As String, ByRef Fetch As FetchCache, ByRef xErr As String) As List(Of Long)
 
             Dim lFnd As Long
             Dim sErr As String = ""
@@ -608,7 +608,7 @@ Namespace Spotlib
 
             Try
 
-                sMessageID = Utils.MakeMsg(xMsg, False)
+                sMessageID = Spotz.MakeMsg(xMsg, False)
                 Dim AtPos As Integer = sMessageID.IndexOf("@")
                 sMessageID = sMessageID.Substring(0, AtPos)
 
@@ -659,7 +659,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Shared Function DoComments(xMsg As String, DatabaseFile As String, Param As Parameters, Fetch As FetchCache) As List(Of Long)
+        Public Shared Function DoComments(xMsg As String, DatabaseFile As String, Fetch As FetchCache, ByRef Param As iWorkParams) As List(Of Long)
 
             Dim zErr As String = ""
             Dim Db As Database = New Database
@@ -671,7 +671,41 @@ Namespace Spotlib
             If Not Db.ExecuteNonQuery("PRAGMA temp_store = MEMORY;", "") = 0 Then Throw New Exception("PRAGMA temp_store")
             If Not Db.ExecuteNonQuery("PRAGMA cache_size = " & CStr(Param.DatabaseCache), "") = 0 Then Throw New Exception("PRAGMA cache_size")
 
-            Return Spots.GetComments(Db, xMsg, Param, Fetch, zErr)
+            Return Spots.GetComments(Db, xMsg, Fetch, zErr)
+
+        End Function
+
+        Public Shared ReadOnly Property LastPosition(ByVal db As Database, ByVal sTable As String) As Long
+
+            Get
+
+                Dim sErr As String = ""
+
+                Try
+
+                    Dim dbCmd As DbCommand = db.CreateCommand
+                    dbCmd.CommandText = "SELECT MAX(rowid) FROM " & sTable
+
+                    Dim tObj As Object = dbCmd.ExecuteScalar()
+
+                    If IsDBNull(tObj) Then Return -1
+
+                    Return CType(tObj, Long)
+
+                Catch ex As Exception
+
+                    Throw New Exception("LastPosition: " & ex.Message)
+
+                End Try
+
+            End Get
+
+        End Property
+
+        Public Shared Function IsSearchQuery(ByVal sQuery As String) As Boolean
+
+            Dim sTest As String = sQuery.ToLower.Trim
+            Return sTest.Contains(" match ")
 
         End Function
 

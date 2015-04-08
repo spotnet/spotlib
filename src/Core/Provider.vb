@@ -20,7 +20,7 @@ Namespace Spotlib
         Private Const DefCols2 As String = "cats TEXT, sender TEXT, tag TEXT, subject TEXT"
         Private Const DefCols As String = "key INT, cat INT, subcat INT, extcat INT, date INT, filesize INTEGER, cats TEXT, sender TEXT, tag TEXT, subject TEXT, msgid TEXT, modulus TEXT"
 
-        Private _RowFilter As String = Utils.DefaultFilter
+        Private _RowFilter As String = Spotz.DefaultFilter
         Private _QueryName As String = _QueryDefaultName
         Private _QueryDefaultName As String = "Overzicht"
 
@@ -48,7 +48,7 @@ Namespace Spotlib
         Public Property QueryName As String
 
             Get
-                If Len(_QueryName) = 0 Or (_QueryName = Utils.DefaultFilter) Then
+                If Len(_QueryName) = 0 Or (_QueryName = Spotz.DefaultFilter) Then
                     Return _QueryDefaultName
                 Else
                     Return _QueryName
@@ -56,7 +56,7 @@ Namespace Spotlib
             End Get
 
             Set(ByVal value As String)
-                If Len(value) = 0 Or (_QueryName = Utils.DefaultFilter) Then
+                If Len(value) = 0 Or (_QueryName = Spotz.DefaultFilter) Then
                     _QueryName = _QueryDefaultName
                 Else
                     _QueryName = value
@@ -166,7 +166,7 @@ Namespace Spotlib
 
                 If CacheQueryCount < 1 Then
                     CacheQueryCount = -1
-                    If ((_RowFilter = Utils.DefaultFilter) Or (Len(_RowFilter) = 0)) Then
+                    If ((_RowFilter = Spotz.DefaultFilter) Or (Len(_RowFilter) = 0)) Then
                         CacheQueryCount = 999999999 '' TODO: CInt(Param.DatabaseFilter)
                     End If
                 End If
@@ -196,7 +196,7 @@ Namespace Spotlib
 
                 Throw New NotImplementedException()
 
-                If Not Utils.IsSearchQuery(_RowFilter) Then
+                If Not Spots.IsSearchQuery(_RowFilter) Then
                     sQ = CreateQuery("asc", "rowid", MaxResults, sOffset, CountQuery)
                 Else
                     sQ = CreateSearchQuery(0, "asc", "rowid", MaxResults, sOffset, CountQuery)
@@ -240,7 +240,7 @@ Namespace Spotlib
 
                 ''Mouse.OverrideCursor = Nothing
 
-                Utils.Foutje("LoadRange: #" & lPosIndex & " - " & ex.Message)
+                Spotz.Foutje("LoadRange: #" & lPosIndex & " - " & ex.Message)
 
                 If TypeOf (ex) Is SQLiteException Then
 
@@ -476,7 +476,7 @@ Namespace Spotlib
 
         End Function
 
-        Private Sub CreateTables(ByRef Param As Parameters)
+        Private Sub CreateTables(ByRef Param As iWorkParams)
 
             If Not Db.ExecuteNonQuery("PRAGMA page_size = 4096;", "") = 0 Then Throw New Exception("PRAGMA page_size")
             If Not Db.ExecuteNonQuery("PRAGMA synchronous = OFF", "") = 0 Then Throw New Exception("PRAGMA synchronous")
@@ -495,7 +495,7 @@ Namespace Spotlib
 
         End Sub
 
-        Public Function Connect(ByVal dbFile As String, ByRef Param As Parameters, ByRef sError As String) As Boolean
+        Public Function Connect(ByVal dbFile As String, ByRef Param As iWorkParams, ByRef sError As String) As Boolean
 
             Dim sErr As String = ""
             Dim bResetTotal As Boolean = False
@@ -547,9 +547,9 @@ Namespace Spotlib
 
                 If bResetTotal Then
 
-                    Param.DatabaseMax = cMax
-                    Param.DatabaseCount = Db.ExecuteScalar("SELECT COUNT(*) FROM spots", "")
-                    Param.DatabaseFilter = Param.DatabaseCount - Math.Abs(Db.ExecuteScalar("SELECT COUNT(*) FROM spots WHERE cat=9", ""))
+                    Param.SetDatabaseMax(cMax)
+                    Param.SetDatabaseCount(Db.ExecuteScalar("SELECT COUNT(*) FROM spots", ""))
+                    Param.SetDatabaseFilter(Param.DatabaseCount - Math.Abs(Db.ExecuteScalar("SELECT COUNT(*) FROM spots WHERE cat=9", "")))
                     Param.Save()
 
                 End If
@@ -629,7 +629,7 @@ Namespace Spotlib
 
             Catch ex As Exception
 
-                Utils.Foutje(ex.Message)
+                Spotz.Foutje(ex.Message)
                 Return False
 
             End Try
@@ -640,7 +640,7 @@ Namespace Spotlib
 
             Get
 
-                Return Utils.LastPosition(Db, sTable)
+                Return Spots.LastPosition(Db, sTable)
 
             End Get
 
