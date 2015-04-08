@@ -1,11 +1,8 @@
 ﻿Imports System.Xml
-Imports System.Diagnostics
 Imports System.ComponentModel
 Imports System.Security.Cryptography
 
-Imports Spotlib.Common
-
-Namespace Spotlib.Core
+Namespace Spotlib
 
     Friend Class Worker
 

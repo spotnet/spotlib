@@ -1,7 +1,6 @@
-﻿Imports System.Text
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 
-Namespace Spotlib.Common
+Namespace Spotlib
 
     Public Class Spot
 

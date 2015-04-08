@@ -1,3 +1,0 @@
-# Spotlib
-
-Library for Spotnet

@@ -1,19 +1,13 @@
-﻿Imports System.IO
-Imports System.Text
-Imports System.Threading
+﻿Imports System.Threading
 Imports System.Diagnostics
-Imports System.Globalization
 Imports System.ComponentModel
 Imports System.Collections.Specialized
 Imports System.Security.Cryptography
 
-Imports Fusenet
-Imports Spotlib.Common
-
 Public Delegate Sub ProgressChangedEventHandler(ByVal e As ProgressChangedEventArgs)
 Public Delegate Sub CompletedEventHandler(ByVal sender As Object, ByVal e As AsyncCompletedEventArgs)
 
-Namespace Spotlib.Core
+Namespace Spotlib
 
     Public Class Headers
 
