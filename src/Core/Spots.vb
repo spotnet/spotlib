@@ -3,6 +3,7 @@ Imports System.Text
 Imports System.Security.Cryptography
 
 Imports Phuse
+Imports System.Data.Common
 
 Namespace Spotlib
 
@@ -546,6 +547,82 @@ Namespace Spotlib
             hw.FindComments(tPhuse, xParam)
 
             Return hw
+
+        End Function
+
+        Public Shared Function GetComments(Db As Database, ByVal xMsg As String, ByRef Param As Parameters, ByRef Fetch As FetchCache, ByRef xErr As String) As List(Of Long)
+
+            Dim lFnd As Long
+            Dim sErr As String = ""
+            Dim sMessageID As String = ""
+            Dim DR As DbDataReader = Nothing
+
+            Try
+
+                sMessageID = MakeMsg(xMsg, False)
+                Dim AtPos As Integer = sMessageID.IndexOf("@")
+                sMessageID = sMessageID.Substring(0, AtPos)
+
+                DR = Db.ExecuteReader("SELECT docid FROM comments WHERE spot MATCH '" & sMessageID.Replace("'"c, "") & "' ORDER BY docid ASC", sErr)
+
+                If DR Is Nothing Then Throw New Exception("Datareader not available: " & sErr)
+
+                With DR
+                    While .Read
+
+                        If IsDBNull(.Item(0)) Then Continue While
+
+                        lFnd = CLng(.Item(0))
+
+                        If lFnd > 0 Then
+
+                            If Not Fetch.CacheHash.Contains(lFnd) Then
+                                Fetch.Cache.Add(lFnd)
+                                Fetch.CacheHash.Add(lFnd)
+                            End If
+
+                        End If
+
+                    End While
+                End With
+
+                DR.Close()
+                Db.Close()
+
+                Return Fetch.Cache
+
+            Catch ex As Exception
+
+                Try
+                    DR.Close()
+                Catch
+                End Try
+
+                Try
+                    Db.Close()
+                Catch
+                End Try
+
+                xErr = "GetComments: " & ex.Message
+                Return Nothing
+
+            End Try
+
+        End Function
+
+        Public Shared Function DoComments(xMsg As String, DatabaseFile As String, Param As Parameters, Fetch As FetchCache) As List(Of Long)
+
+            Dim zErr As String = ""
+            Dim Db As Database = New Database
+
+            If Not Db.Connect(DatabaseFile, True) Then
+                Throw New Exception("Db.Connect")
+            End If
+
+            If Not Db.ExecuteNonQuery("PRAGMA temp_store = MEMORY;", "") = 0 Then Throw New Exception("PRAGMA temp_store")
+            If Not Db.ExecuteNonQuery("PRAGMA cache_size = " & CStr(Param.DatabaseCache), "") = 0 Then Throw New Exception("PRAGMA cache_size")
+
+            Return Spots.GetComments(Db, xMsg, Param, Fetch, zErr)
 
         End Function
 
