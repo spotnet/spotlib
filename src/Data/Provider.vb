@@ -20,7 +20,7 @@ Namespace Spotlib
         Private Const DefCols2 As String = "cats TEXT, sender TEXT, tag TEXT, subject TEXT"
         Private Const DefCols As String = "key INT, cat INT, subcat INT, extcat INT, date INT, filesize INTEGER, cats TEXT, sender TEXT, tag TEXT, subject TEXT, msgid TEXT, modulus TEXT"
 
-        Private _RowFilter As String = DefaultFilter
+        Private _RowFilter As String = Utils.DefaultFilter
         Private _QueryName As String = _QueryDefaultName
         Private _QueryDefaultName As String = "Overzicht"
 
@@ -131,7 +131,7 @@ Namespace Spotlib
             Static xDate As Integer = 0
 
             If xDate = 0 Then
-                Dim Span As TimeSpan = (DateTime.UtcNow - EPOCH)
+                Dim Span As TimeSpan = (DateTime.UtcNow - Utils.EPOCH)
                 xDate = CInt(Span.TotalSeconds)
             End If
 
@@ -166,7 +166,7 @@ Namespace Spotlib
 
                 If CacheQueryCount < 1 Then
                     CacheQueryCount = -1
-                    If ((_RowFilter = DefaultFilter) Or (Len(_RowFilter) = 0)) Then
+                    If ((_RowFilter = Utils.DefaultFilter) Or (Len(_RowFilter) = 0)) Then
                         CacheQueryCount = 999999999 '' TODO: CInt(Param.DatabaseFilter)
                     End If
                 End If
@@ -196,7 +196,7 @@ Namespace Spotlib
 
                 Throw New NotImplementedException()
 
-                If Not IsSearchQuery(_RowFilter) Then
+                If Not Utils.IsSearchQuery(_RowFilter) Then
                     sQ = CreateQuery("asc", "rowid", MaxResults, sOffset, CountQuery)
                 Else
                     sQ = CreateSearchQuery(0, "asc", "rowid", MaxResults, sOffset, CountQuery)
@@ -240,7 +240,7 @@ Namespace Spotlib
 
                 ''Mouse.OverrideCursor = Nothing
 
-                Foutje("LoadRange: #" & lPosIndex & " - " & ex.Message)
+                Utils.Foutje("LoadRange: #" & lPosIndex & " - " & ex.Message)
 
                 If TypeOf (ex) Is SQLiteException Then
 
@@ -499,7 +499,7 @@ Namespace Spotlib
 
             Dim sErr As String = ""
             Dim bResetTotal As Boolean = False
-            Dim bNew As Boolean = Not FileExists(dbFile)
+            Dim bNew As Boolean = Not Utils.FileExists(dbFile)
 
             _Corrupted = False
 
@@ -629,7 +629,7 @@ Namespace Spotlib
 
             Catch ex As Exception
 
-                Foutje(ex.Message)
+                Utils.Foutje(ex.Message)
                 Return False
 
             End Try

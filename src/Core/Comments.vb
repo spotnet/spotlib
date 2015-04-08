@@ -178,7 +178,7 @@ Namespace Spotlib
                 End If
 
                 Dim bNew As Boolean = (xParam.Position < 1)
-                Dim xProg As String = sIIF(bNew, "Zoeken naar reacties", "Zoeken naar nieuwe reacties")
+                Dim xProg As String = Utils.sIIF(bNew, "Zoeken naar reacties", "Zoeken naar nieuwe reacties")
 
                 SetP(0, xProg & "...", asyncOp)
 
@@ -207,7 +207,7 @@ Namespace Spotlib
 
                 End If
 
-                WorkLoad = CreateWork(lFirst, lLast)
+                WorkLoad = Utils.CreateWork(lFirst, lLast)
                 WorkTotal = WorkLoad.Count
 
                 If WorkTotal < 1 Then
@@ -223,7 +223,7 @@ Namespace Spotlib
                     HeaderX = Nothing
 
                     If MustCancel(asyncOp) Then
-                        iCompleted(zRes, True, CancelMSG, asyncOp)
+                        iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
                         Exit Sub
                     End If
 
@@ -268,15 +268,15 @@ Namespace Spotlib
 
                     If ProgressValue <> LastP Then
                         If zRes.Count = 0 Then
-                            SetP(0, sIIF(bNew, "Zoeken naar ", "Zoeken naar nieuwe ") & "reacties..." & LastSpeed, asyncOp)
+                            SetP(0, Utils.sIIF(bNew, "Zoeken naar ", "Zoeken naar nieuwe ") & "reacties..." & LastSpeed, asyncOp)
                         Else
-                            SetP(ProgressValue, FormatLong(zRes.Count) & " " & sIIF(Not bNew, "nieuwe ", "") & "reacties gevonden" & LastSpeed, asyncOp)
+                            SetP(ProgressValue, Utils.FormatLong(zRes.Count) & " " & Utils.sIIF(Not bNew, "nieuwe ", "") & "reacties gevonden" & LastSpeed, asyncOp)
                         End If
                         LastP = ProgressValue
                     End If
 
                     If MustCancel(asyncOp) Then
-                        iCompleted(zRes, True, CancelMSG, asyncOp)
+                        iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
                         Exit Sub
                     End If
 
@@ -327,13 +327,13 @@ Namespace Spotlib
                 Next
 
                 If MustCancel(asyncOp) Then
-                    iCompleted(zRes, True, CancelMSG, asyncOp)
+                    iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
                     Exit Sub
                 End If
 
                 zRes.Reverse()
 
-                SetP(100, FormatLong(zRes.Count) & " " & sIIF(Not bNew, "nieuwe ", "") & "reacties gevonden" & LastSpeed, asyncOp)
+                SetP(100, Utils.FormatLong(zRes.Count) & " " & Utils.sIIF(Not bNew, "nieuwe ", "") & "reacties gevonden" & LastSpeed, asyncOp)
 
                 iCompleted(zRes, False, vbNullString, asyncOp)
 
@@ -375,7 +375,7 @@ Namespace Spotlib
                     End If
 
                     If MustCancel(asyncOp) Then
-                        iCompleted(zRes, True, CancelMSG, asyncOp)
+                        iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
                         Exit Sub
                     End If
 
@@ -411,7 +411,7 @@ Namespace Spotlib
                 Next
 
                 If MustCancel(asyncOp) Then
-                    iCompleted(zRes, True, CancelMSG, asyncOp)
+                    iCompleted(zRes, True, Utils.CancelMSG, asyncOp)
                     Exit Sub
                 End If
 
@@ -462,11 +462,11 @@ Namespace Spotlib
                     End If
 
                     If UCase(XL(iXL)).StartsWith("DATE: ") Then
-                        KL.Created = ConvertDate(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
+                        KL.Created = Utils.ConvertDate(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
                     End If
 
                     If UCase(XL(iXL)).StartsWith("MESSAGE-ID: ") Then
-                        KL.MessageID = MakeMsg(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
+                        KL.MessageID = Utils.MakeMsg(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
                     End If
 
                     If UCase(XL(iXL)).StartsWith("X-USER-AVATAR: ") Then
@@ -486,7 +486,7 @@ Namespace Spotlib
 
                             Else
 
-                                .Modulus = FixPadding(UnSpecialString(.Modulus))
+                                .Modulus = Utils.FixPadding(Utils.UnSpecialString(.Modulus))
 
                             End If
 
@@ -495,7 +495,7 @@ Namespace Spotlib
                     End If
 
                     If UCase(XL(iXL)).StartsWith("X-USER-SIGNATURE: ") Then
-                        KL.User.Signature = UnSpecialString(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
+                        KL.User.Signature = Utils.UnSpecialString(Mid(XL(iXL), XL(iXL).IndexOf(":") + 3))
                     End If
 
                     If UCase(XL(iXL)).StartsWith("ORGANIZATION: ") Then
@@ -527,7 +527,7 @@ Namespace Spotlib
                     Return Nothing
                 End If
 
-                KL.User.Avatar = FixPadding(UnSpecialString(zAvatar))
+                KL.User.Avatar = Utils.FixPadding(Utils.UnSpecialString(zAvatar))
                 KL.User.Trace = KL.User.Trace.Replace(vbCrLf & KL.User.Organisation, "").Trim
 
                 If KL.User.Trace = vbCrLf Then KL.User.Trace = ""
@@ -544,10 +544,10 @@ Namespace Spotlib
 
                 If Not xParam.CheckSignatures Then Return KL
 
-                KL.User.ValidSignature = CheckUserSignature(KL.MessageID, KL.User.Signature, KL.User.Modulus)
+                KL.User.ValidSignature = Utils.CheckUserSignature(KL.MessageID, KL.User.Signature, KL.User.Modulus)
 
                 If Not KL.User.ValidSignature Then
-                    KL.User.ValidSignature = CheckUserSignature(KL.MessageID & KL.Body & vbCrLf & KL.From, KL.User.Signature, KL.User.Modulus)
+                    KL.User.ValidSignature = Utils.CheckUserSignature(KL.MessageID & KL.Body & vbCrLf & KL.From, KL.User.Signature, KL.User.Modulus)
                 End If
 
                 If Not KL.User.ValidSignature Then sError = "Invalid signature" : Return Nothing

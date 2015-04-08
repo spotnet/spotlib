@@ -272,7 +272,7 @@ Namespace Spotlib
 
                 If Len(Spot.Title) = 0 Then Return ""
 
-                Dim xD As Date = EPOCH.AddSeconds(Spot.Stamp).ToLocalTime
+                Dim xD As Date = Utils.EPOCH.AddSeconds(Spot.Stamp).ToLocalTime
                 Dim xCom As Date = CDate(Now.ToString("yyyy-MM-dd"))
 
                 Dim sRet As String = ""
@@ -322,7 +322,7 @@ Namespace Spotlib
                 Dim lCat As Byte = CByte(CStr(Spot.SubCat).Substring(0, 1))
 
                 Try
-                    Return TranslateCatShort(lCat, CByte(CStr(CLng(Spot.SubCat)).Substring(1)))
+                    Return Utils.TranslateCatShort(lCat, CByte(CStr(CLng(Spot.SubCat)).Substring(1)))
                 Catch
                     Return ""
                 End Try
@@ -334,7 +334,7 @@ Namespace Spotlib
 
             Get
                 If Len(Spot.Title) = 0 Then Return ""
-                Dim sVal As String = ReturnInfo(Spot.ExtCat)
+                Dim sVal As String = Utils.ReturnInfo(Spot.ExtCat)
                 If sVal Is Nothing Then sVal = ""
                 Return sVal
             End Get
@@ -344,7 +344,7 @@ Namespace Spotlib
         Public ReadOnly Property Afzender As String Implements SpotRow.Afzender
             Get
                 If Len(Spot.Title) = 0 Then Return ""
-                Return StripNonAlphaNumericCharacters(Spot.Poster)
+                Return Utils.StripNonAlphaNumericCharacters(Spot.Poster)
             End Get
         End Property
 
@@ -352,7 +352,7 @@ Namespace Spotlib
 
             Get
                 If Len(Spot.Title) = 0 Then Return ""
-                Return StripNonAlphaNumericCharacters(Spot.Tag)
+                Return Utils.StripNonAlphaNumericCharacters(Spot.Tag)
             End Get
 
         End Property
