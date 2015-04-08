@@ -2,14 +2,10 @@
 Imports System.Text
 Imports System.Xml
 Imports System.Threading
-Imports System.Security.Cryptography
 Imports System.Globalization
-Imports System.Security
+Imports System.Security.Cryptography
 
-Imports Fusenet
-Imports Spotlib.Core
-
-Namespace Spotlib.Common
+Namespace Spotlib
 
     Module Utils
 

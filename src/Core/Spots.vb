@@ -1,14 +1,10 @@
-﻿Imports System.IO
-Imports System.Xml
+﻿Imports System.Xml
 Imports System.Text
-Imports System.Security
 Imports System.Security.Cryptography
-Imports System.Security.Cryptography.Xml
 
 Imports Phuse
-Imports Spotlib.Common
 
-Namespace Spotlib.Core
+Namespace Spotlib
 
     Public Class Spots
 

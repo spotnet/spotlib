@@ -1,19 +1,15 @@
-﻿Imports System.IO
-Imports System.Text
-Imports System.Threading
+﻿Imports System.Threading
 Imports System.Diagnostics
-Imports System.Globalization
 Imports System.ComponentModel
 Imports System.Collections.Specialized
 
-Imports Spotlib.Common
-Imports Fusenet
+Imports Spotlib
 
 Public Delegate Sub NewCommentEventHandler(ByVal e As SpotnetNewCommentEventArgs)
 Public Delegate Sub CommentProgressChangedEventHandler(ByVal e As ProgressChangedEventArgs)
 Public Delegate Sub CommentCompletedEventHandler(ByVal sender As Object, ByVal e As AsyncCompletedEventArgs)
 
-Namespace Spotlib.Core
+Namespace Spotlib
 
     Public Class Comments
 

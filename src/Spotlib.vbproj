@@ -64,7 +64,6 @@
     <Compile Include="Core\Headers.vb" />
     <Compile Include="Core\NNTP.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
-    <Compile Include="Resources\AssemblyInfo.vb" />
     <Compile Include="Resources\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

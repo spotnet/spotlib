@@ -1,4 +1,13 @@
-﻿'Imports System
+﻿Imports System.Runtime.InteropServices
+Imports System.Reflection
+
+<Assembly: AssemblyTitle("Spotlib")>
+<Assembly: AssemblyDescription("Library for Spotnet")>
+<Assembly: AssemblyProduct("Spotlib")>
+<Assembly: AssemblyVersion("0.9.2.0")>
+<Assembly: Guid("3A541D6D-6B12-4418-9F42-B26806F658B6")>
+<Assembly: AssemblyFileVersion("0.9.2.0")>
+'Imports System
 'Imports System.Reflection
 'Imports System.Runtime.InteropServices
 
