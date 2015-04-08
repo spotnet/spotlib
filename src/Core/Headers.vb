@@ -171,7 +171,7 @@ Namespace Spotlib
                 WorkCnt = 0
                 SUbTotal = 0
 
-                WorkLoad = Utils.CreateWork(lFirst, lLast)
+                WorkLoad = Spotz.CreateWork(lFirst, lLast)
 
                 WorkTotal = WorkLoad.Count
                 WorkCounter = WorkTotal
@@ -194,7 +194,7 @@ Namespace Spotlib
                     End If
 
                     If MustCancel(asyncOp) Then
-                        iCompleted(True, xParam, Utils.CancelMSG, asyncOp)
+                        iCompleted(True, xParam, Spotz.CancelMSG, asyncOp)
                         Exit Sub
                     End If
 
@@ -286,7 +286,7 @@ Namespace Spotlib
             If StopFlag Then Exit Sub
 
             If MustCancel(asyncOp) Then
-                iCompleted(True, xParam, Utils.CancelMSG, asyncOp)
+                iCompleted(True, xParam, Spotz.CancelMSG, asyncOp)
                 Exit Sub
             End If
 
@@ -314,7 +314,7 @@ Namespace Spotlib
                 If WorkCnt < 1 Then
                     SetP(0, "Zoeken naar " & Utils.sIIF(bNew, "nieuwe ", "") & "spots..." & LastSpeed, asyncOp) '' (totaal " & FormatLong2(SUbTotal) & ").")
                 Else
-                    SetP(ProgressValue, Utils.FormatLong(WorkCnt) & " " & Utils.sIIF(bNew, "nieuwe ", "") & "spots gevonden" & LastSpeed, asyncOp) '' (totaal " & FormatLong2(SUbTotal) & ").")
+                    SetP(ProgressValue, Spotz.FormatLong(WorkCnt) & " " & Utils.sIIF(bNew, "nieuwe ", "") & "spots gevonden" & LastSpeed, asyncOp) '' (totaal " & FormatLong2(SUbTotal) & ").")
                 End If
 
             End If
@@ -384,7 +384,7 @@ Namespace Spotlib
                                                         If UBound(sCmd) < 1 Then Continue For
                                                         If Len(sCmd(1)) < 1 Then Continue For
 
-                                                        TheDeletes.Add(Utils.MakeMsg(sCmd(1), False))
+                                                        TheDeletes.Add(Spotz.MakeMsg(sCmd(1), False))
 
                                                 End Select
 

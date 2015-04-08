@@ -84,7 +84,7 @@ Namespace Spotlib
                                     Lz.ImageHeight = CInt(Val(.Attributes("Height").InnerText))
                                 End If
                                 For Each GN As XmlNode In .SelectNodes("Segment")
-                                    Lz.ImageID = Utils.MakeMsg(Trim(GN.InnerText), True)
+                                    Lz.ImageID = Spotz.MakeMsg(Trim(GN.InnerText), True)
                                     Lz.Image = ""
                                     Exit For
                                 Next
@@ -124,12 +124,12 @@ Namespace Spotlib
                     If (Not bCheck) Or (Lz.KeyID = 1) Then Return Lz
 
                     If (Len(Lz.User.Signature) > 0) And (Len(Lz.User.Modulus) > 0) And (Len(Lz.MessageID) > 0) Then
-                        Lz.User.ValidSignature = Utils.CheckUserSignature(Utils.MakeMsg(Lz.MessageID), Lz.User.Signature, Lz.User.Modulus)
+                        Lz.User.ValidSignature = Spotz.CheckUserSignature(Spotz.MakeMsg(Lz.MessageID), Lz.User.Signature, Lz.User.Modulus)
                     End If
 
                     If Not Lz.User.ValidSignature Then
                         If (Len(Lz.User.Signature) > 0) And (Len(Lz.User.Modulus) > 0) And (Len(XmlSignature) > 0) Then
-                            Lz.User.ValidSignature = Utils.CheckUserSignature(XmlSignature, Lz.User.Signature, Lz.User.Modulus)
+                            Lz.User.ValidSignature = Spotz.CheckUserSignature(XmlSignature, Lz.User.Signature, Lz.User.Modulus)
                         End If
                     End If
 
@@ -387,13 +387,13 @@ Namespace Spotlib
                         .SubCats = TempCat
 
                         If .Category = 1 Then
-                            If Utils.IsTV(.SubCats) Then
+                            If Spotz.IsTV(.SubCats) Then
                                 .Category = 6
                             Else
-                                If Utils.IsEro(.SubCats) Then
+                                If Spotz.IsEro(.SubCats) Then
                                     .Category = 9
                                 Else
-                                    If Utils.IsEbook(.SubCats) Then
+                                    If Spotz.IsEbook(.SubCats) Then
                                         .Category = 5
                                     End If
                                 End If

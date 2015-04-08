@@ -1,8 +1,5 @@
-﻿Imports System.IO
-Imports System.Text
+﻿Imports System.Text
 Imports System.Data.Common
-
-Imports Spotlib
 
 Namespace Spotlib
     Public Class Storage
@@ -36,7 +33,7 @@ Namespace Spotlib
 
         End Function
 
-        Function InsertSpots(ByRef Param As Parameters, ByVal zList As List(Of Spot), ByVal DeleteList As HashSet(Of String), ByRef xSave As rSaveSpots, ByRef sErr As String) As Boolean
+        Function InsertSpots(ByVal zList As List(Of Spot), ByVal DeleteList As HashSet(Of String), ByRef xSave As rSaveSpots, ByRef Param As iWorkParams, ByRef sErr As String) As Boolean
 
             Dim ReturnParam As New rSaveSpots
 
@@ -65,9 +62,9 @@ Namespace Spotlib
 
                 RaiseEvent ProgressChanged("Indexen bijwerken...", 0)
 
-                Param.DatabaseMax = Db.ExecuteScalar("SELECT MAX(rowid) FROM spots", "")
-                Param.DatabaseCount = Db.ExecuteScalar("SELECT COUNT(*) FROM spots", "")
-                Param.DatabaseFilter = Param.DatabaseCount - Math.Abs(Db.ExecuteScalar("SELECT COUNT(*) FROM spots WHERE cat=9", ""))
+                Param.SetDatabaseMax(Db.ExecuteScalar("SELECT MAX(rowid) FROM spots", ""))
+                Param.SetDatabaseCount(Db.ExecuteScalar("SELECT COUNT(*) FROM spots", ""))
+                Param.SetDatabaseFilter(Param.DatabaseCount - Math.Abs(Db.ExecuteScalar("SELECT COUNT(*) FROM spots WHERE cat=9", "")))
 
                 Param.Save()
 
@@ -143,7 +140,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function AddComments(ByRef Param As Parameters, ByRef zList As List(Of Comment), ByRef xSave As rSaveComments, ByRef sErr As String) As Boolean
+        Public Function AddComments(ByRef zList As List(Of Comment), ByRef xSave As rSaveComments, ByRef Param As iWorkParams, ByRef sErr As String) As Boolean
 
             Dim zPos As Integer = 0
             Dim LastP As Integer = -1
@@ -289,7 +286,7 @@ Namespace Spotlib
                     Param(1).Value = .KeyID
                     Param(2).Value = .Category
                     Param(3).Value = CInt((.Category * 100) + .SubCat)
-                    Param(4).Value = CInt((.Category * 100) + Utils.TranslateInfo(.Category, .SubCats))
+                    Param(4).Value = CInt((.Category * 100) + Spotz.TranslateInfo(.Category, .SubCats))
                     Param(5).Value = .Stamp
                     Param(6).Value = .Filesize
 
@@ -431,7 +428,7 @@ Namespace Spotlib
 
             Catch ex As Exception
 
-                Utils.Foutje(ex.Message)
+                Spotz.Foutje(ex.Message)
                 Return False
 
             End Try
