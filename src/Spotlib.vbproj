@@ -49,9 +49,20 @@
     <MyType>Windows</MyType>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DataVirtualization">
+      <HintPath>Vendor\DataVirtualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Fusenet">
+      <HintPath>Vendor\Fusenet.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>Vendor\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.XML" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -63,6 +74,10 @@
     <Compile Include="Core\Comments.vb" />
     <Compile Include="Core\Headers.vb" />
     <Compile Include="Core\NNTP.vb" />
+    <Compile Include="Data\Database.vb" />
+    <Compile Include="Data\Provider.vb" />
+    <Compile Include="Data\Storage.vb" />
+    <Compile Include="Data\View.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="Resources\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -101,12 +116,6 @@
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\fusenet\src\Fusenet.csproj">
-      <Project>{abcbd5d0-09a6-45c7-8055-bd04da7b3665}</Project>
-      <Name>Fusenet</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
