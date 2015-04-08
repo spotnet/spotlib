@@ -289,7 +289,7 @@ Namespace Spotlib
                     Param(1).Value = .KeyID
                     Param(2).Value = .Category
                     Param(3).Value = CInt((.Category * 100) + .SubCat)
-                    Param(4).Value = CInt((.Category * 100) + TranslateInfo(.Category, .SubCats))
+                    Param(4).Value = CInt((.Category * 100) + Utils.TranslateInfo(.Category, .SubCats))
                     Param(5).Value = .Stamp
                     Param(6).Value = .Filesize
 
@@ -431,7 +431,7 @@ Namespace Spotlib
 
             Catch ex As Exception
 
-                Foutje(ex.Message)
+                Utils.Foutje(ex.Message)
                 Return False
 
             End Try

@@ -22,7 +22,7 @@ Namespace Spotlib
 
                 sReturn = tPhuse.Slots.Send(sGroup, sCommands)
 
-                Return GetCode(sReturn)
+                Return Utils.GetCode(sReturn)
 
             Catch ex As Exception
 
@@ -76,12 +76,12 @@ Namespace Spotlib
 
                 Case -1
 
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
 
                 Case Else
 
                     sError = Left(sRet, 500)
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
 
             End Select
 
@@ -127,7 +127,7 @@ Namespace Spotlib
 
                 Case -1
 
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return Nothing
@@ -135,7 +135,7 @@ Namespace Spotlib
                 Case Else
 
                     sError = Left(sRet, 500)
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return Nothing
@@ -158,7 +158,7 @@ Namespace Spotlib
 
                 Case -1
 
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return Nothing
@@ -166,7 +166,7 @@ Namespace Spotlib
                 Case Else
 
                     sError = Left(sRet, 500)
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return Nothing
@@ -192,7 +192,7 @@ Namespace Spotlib
 
                 Case -1
 
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return False
@@ -200,7 +200,7 @@ Namespace Spotlib
                 Case Else
 
                     sError = Left(sResp, 500)
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return False
@@ -226,7 +226,7 @@ Namespace Spotlib
 
                 Case -1
 
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return False
@@ -234,7 +234,7 @@ Namespace Spotlib
                 Case Else
 
                     sError = Left(sResp, 500)
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return False
@@ -260,7 +260,7 @@ Namespace Spotlib
 
                 Case -1
 
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return False
@@ -268,7 +268,7 @@ Namespace Spotlib
                 Case Else
 
                     sError = Left(sResp, 500)
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return False
@@ -294,7 +294,7 @@ Namespace Spotlib
 
                 Case -1
 
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return False
@@ -302,7 +302,7 @@ Namespace Spotlib
                 Case Else
 
                     sError = Left(sResp, 500)
-                    lRet = GetCode(sError)
+                    lRet = Utils.GetCode(sError)
                     sError = TranslateError(lRet, sError)
 
                     Return False

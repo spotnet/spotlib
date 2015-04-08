@@ -8,14 +8,14 @@ Imports System.Data.Common
 
 Namespace Spotlib
 
-    Module Utils
+    Public Class Utils
 
         Friend Const SearchM As String = "Zoeken: "
         Friend Const CancelMSG As String = "Geannuleerd"
         Friend Const Spotname As String = "Spotnet"
         Friend Const DefaultFilter As String = "cat < 9"
 
-        Friend ReadOnly EPOCH As Date = New Date(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+        Friend Shared ReadOnly EPOCH As Date = New Date(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
         Private Declare Function SHGetKnownFolderPath Lib "shell32" (ByRef knownFolder As Guid, ByVal flags As UInteger, ByVal htoken As IntPtr, ByRef path As IntPtr) As Integer
 
         Private Enum convTo
@@ -32,25 +32,24 @@ Namespace Spotlib
 
         Friend Const MsgDomain As String = "spot.net"
 
-        Friend Function LatinEnc() As Encoding
+        Friend Shared Function LatinEnc() As Encoding
 
             Return Encoding.GetEncoding(&H6FAF)
 
         End Function
 
-        Friend Function GetLatin(ByRef zText() As Byte) As String
+        Friend Shared Function GetLatin(ByRef zText() As Byte) As String
 
             Return LatinEnc.GetString(zText)
 
         End Function
 
-        Friend Function MakeLatin(ByVal zText As String) As Byte()
+        Friend Shared Function MakeLatin(ByVal zText As String) As Byte()
 
             Return LatinEnc.GetBytes(zText)
 
         End Function
-
-        Friend Function ConvertDate(ByVal sDate As String) As Date
+        Friend Shared Function ConvertDate(ByVal sDate As String) As Date
 
             Try
 
@@ -83,8 +82,7 @@ Namespace Spotlib
             End Try
 
         End Function
-
-        Friend Function FixPadding(ByRef sIn As String) As String
+        Friend Shared Function FixPadding(ByRef sIn As String) As String
 
             Select Case (sIn.Length Mod 4)
                 Case 0
@@ -101,7 +99,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function IsAscii(ByVal text As String, ByRef lPos As Integer) As Boolean
+        Friend Shared Function IsAscii(ByVal text As String, ByRef lPos As Integer) As Boolean
 
             Dim iPos As Integer = 0
 
@@ -121,7 +119,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function MakeAscii(ByVal text As String) As String
+        Friend Shared Function MakeAscii(ByVal text As String) As String
 
             If Len(Trim$(text)) = 0 Then Return ""
 
@@ -139,7 +137,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function SplitBySizEx(ByVal strInput As String, ByVal iSize As Integer) As String()
+        Friend Shared Function SplitBySizEx(ByVal strInput As String, ByVal iSize As Integer) As String()
 
             Dim iLength As Integer = strInput.Length()
             Dim iWords As Integer = CInt(iLength / iSize)
@@ -157,7 +155,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function UTFEncode(ByVal sInput As String) As String
+        Friend Shared Function UTFEncode(ByVal sInput As String) As String
 
             Dim i As Integer
             Dim Ascii As Integer
@@ -192,7 +190,7 @@ Namespace Spotlib
 
         End Function
 
-        Private Function ParseEncodedWord(ByVal input As String) As String
+        Private Shared Function ParseEncodedWord(ByVal input As String) As String
 
             Dim enc As Encoding
             Dim sb As New StringBuilder()
@@ -245,7 +243,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function Parse(ByVal input As String) As String
+        Friend Shared Function Parse(ByVal input As String) As String
 
             Dim sb As New StringBuilder()
             Dim currentWord As New StringBuilder()
@@ -294,7 +292,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function ZipStr(ByRef Inz() As Byte) As String
+        Friend Shared Function ZipStr(ByRef Inz() As Byte) As String
 
             Try
 
@@ -314,7 +312,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function UnzipStr(ByRef Inz() As Byte) As String
+        Friend Shared Function UnzipStr(ByRef Inz() As Byte) As String
 
             Try
 
@@ -332,7 +330,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function IsNZB(ByVal _FileLnk As String, ByRef sSize As Long) As Boolean
+        Public Shared Function IsNZB(ByVal _FileLnk As String, ByRef sSize As Long) As Boolean
 
             Dim m_xmld As XmlDocument
 
@@ -363,7 +361,7 @@ Namespace Spotlib
 
         End Function
 
-        Private Function UnGZIP(ByRef Inz() As Byte) As String
+        Private Shared Function UnGZIP(ByRef Inz() As Byte) As String
 
             Try
 
@@ -380,7 +378,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function CheckHash(ByVal sMsg As String) As Boolean
+        Friend Shared Function CheckHash(ByVal sMsg As String) As Boolean
 
             Dim ShA As New SHA1Managed
             Dim ShABytes() As Byte = ShA.ComputeHash(MakeLatin(sMsg))
@@ -397,13 +395,13 @@ Namespace Spotlib
 
         End Function
 
-        Private Function GetBinsearch() As String
+        Private Shared Function GetBinsearch() As String
 
             Throw New NotImplementedException()
 
         End Function
 
-        Private Function GetNZB(ByVal zPostData As String, ByVal OrgUrl As String, ByRef zError As String) As String
+        Private Shared Function GetNZB(ByVal zPostData As String, ByVal OrgUrl As String, ByRef zError As String) As String
 
             Dim sReturn As String
             Dim bytArguments As Byte()
@@ -439,7 +437,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function CheckUserSignature(ByVal sOrg As String, ByVal sSignature As String, ByVal sUserKey As String) As Boolean
+        Public Shared Function CheckUserSignature(ByVal sOrg As String, ByVal sSignature As String, ByVal sUserKey As String) As Boolean
 
             Try
 
@@ -456,19 +454,19 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function SpecialString(ByVal sDataIn As String) As String
+        Friend Shared Function SpecialString(ByVal sDataIn As String) As String
 
             Return sDataIn.Replace("/", "-s").Replace("+", "-p").Replace("=", "")
 
         End Function
 
-        Friend Function UnSpecialString(ByVal sDataIn As String) As String
+        Friend Shared Function UnSpecialString(ByVal sDataIn As String) As String
 
             Return sDataIn.Replace("-s", "/").Replace("-p", "+")
 
         End Function
 
-        Friend Function CreateWork(ByVal sFirst As Long, ByVal sLast As Long) As List(Of NNTPWork)
+        Friend Shared Function CreateWork(ByVal sFirst As Long, ByVal sLast As Long) As List(Of NNTPWork)
 
             Dim xWork As NNTPWork
             Dim WorkCol As New List(Of NNTPWork)
@@ -565,7 +563,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function FormatLong(ByVal zLong As Long) As String
+        Friend Shared Function FormatLong(ByVal zLong As Long) As String
 
             Dim sT As String
             sT = FormatLong2(zLong)
@@ -574,14 +572,14 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function FormatLong2(ByVal zLong As Long) As String
+        Friend Shared Function FormatLong2(ByVal zLong As Long) As String
 
             If zLong = 0 Then Return "0"
             Return zLong.ToString("#,#", CultureInfo.InvariantCulture).Replace(",", ".")
 
         End Function
 
-        Friend Function SplitLines(ByVal sIn As String, ByVal AllowBlankLines As Boolean, ByVal lMax As Integer) As List(Of String)
+        Friend Shared Function SplitLines(ByVal sIn As String, ByVal AllowBlankLines As Boolean, ByVal lMax As Integer) As List(Of String)
 
             Dim Lin As Integer
             Dim Lin2 As Integer
@@ -625,7 +623,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function SplitLinesGZIP(ByVal sIn As String) As List(Of String)
+        Friend Shared Function SplitLinesGZIP(ByVal sIn As String) As List(Of String)
 
             Dim Lin As Integer
             Dim Linez2 As String()
@@ -670,7 +668,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function SplitLinesXML(ByVal sIn As String, ByVal sPrefix As String, ByVal lMax As Integer) As String
+        Friend Shared Function SplitLinesXML(ByVal sIn As String, ByVal sPrefix As String, ByVal lMax As Integer) As String
 
             Dim Lin As Integer
             Dim Lin2 As Integer
@@ -704,7 +702,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function GetLocation(ByVal URL As String) As String
+        Friend Shared Function GetLocation(ByVal URL As String) As String
 
             Try
 
@@ -721,7 +719,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function GetHash(ByVal zPostData As String, ByRef SignServer As String, ByVal SignCmd As String, ByRef zError As String) As String
+        Friend Shared Function GetHash(ByVal zPostData As String, ByRef SignServer As String, ByVal SignCmd As String, ByRef zError As String) As String
 
             Dim sLoc As String = ""
             Dim sReturn As String = ""
@@ -786,13 +784,13 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function CreateUserSignature(ByVal sDataIn As String, ByVal cRSA As RSACryptoServiceProvider) As String
+        Friend Shared Function CreateUserSignature(ByVal sDataIn As String, ByVal cRSA As RSACryptoServiceProvider) As String
 
             Return SpecialString(Convert.ToBase64String(cRSA.SignHash((New SHA1Managed).ComputeHash(MakeLatin(sDataIn)), Nothing)))
 
         End Function
 
-        Friend Function CheckFrom(ByVal sFrom As String) As Boolean
+        Friend Shared Function CheckFrom(ByVal sFrom As String) As Boolean
 
             If sFrom.Trim.ToLower = "god" Then Return False
             If sFrom.Trim.ToLower = "mod" Then Return False
@@ -814,7 +812,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function PostData(ByVal tPhuse As Phuse.Engine, ByRef zInput As List(Of String), ByVal zSub As String, ByVal zFrom As String, ByVal zGroup As String, ByVal zExtra As String, ByRef xOutID As String, ByVal MsgID As String, ByRef sError As String) As Boolean
+        Friend Shared Function PostData(ByVal tPhuse As Phuse.Engine, ByRef zInput As List(Of String), ByVal zSub As String, ByVal zFrom As String, ByVal zGroup As String, ByVal zExtra As String, ByRef xOutID As String, ByVal MsgID As String, ByRef sError As String) As Boolean
 
             Dim cNNTP As cNNTP
             Dim XC As Long = 0
@@ -868,62 +866,13 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function CreateSpot(ByVal sPoster As String, ByVal sTitle As String, ByVal sNZB As String, ByVal lFileSize As Long, ByVal sLink As String, ByVal sImageID As String, ByVal sDesc As String, ByVal HCat As Byte, ByVal sCat As String, ByVal sTag As String, ByRef xOut() As String, ByRef SignServer As String, ByVal lImgX As Long, ByVal lImgY As Long, ByRef zErr As String) As Boolean
-
-            Dim zPost As String = ""
-
-            zPost = "cat=" & Str(HCat).Trim & "&"
-            zPost += "sub=" & StripNonAlphaNumericCharacters(sCat).ToLower & "&"
-            zPost += "title=" & MakeP(sTitle) & "&"
-            zPost += "from=" & StripNonAlphaNumericCharacters(sPoster) & "&"
-            zPost += "desc=" & MakeP(sDesc) & "&"
-            zPost += "tag=" & StripNonAlphaNumericCharacters(sTag) & "&"
-            zPost += "msgid=" & MakeP(sNZB) & "&"
-            If Len(sLink) > 0 Then zPost += "link=" & MakeP(sLink) & "&"
-            zPost += "img=" & MakeP(sImageID) & "&"
-            zPost += "imgx=" & Str(lImgX).Trim & "&"
-            zPost += "imgy=" & Str(lImgY).Trim & "&"
-            zPost += "size=" & Str(lFileSize).Trim & "&"
-
-            Dim sResult As String = GetHash(zPost, SignServer, "signxml", zErr)
-
-            If sResult Is Nothing Then Return False
-            If sResult.Length < 20 Then zErr = sResult : Return False
-            If sResult.Substring(sResult.Length - 10).ToLower <> "</spotnet>" Then zErr = sResult : Return False
-
-            Try
-
-                Dim zHeader As String = sResult.Substring(0, sResult.IndexOf(" "))
-                Dim zXMLSign As String = sResult.Substring(zHeader.Length + 1)
-
-                zXMLSign = zXMLSign.Substring(0, zXMLSign.IndexOf(" "))
-
-                Dim zXML As String = sResult.Substring(zHeader.Length + zXMLSign.Length + 2)
-
-                ReDim xOut(2)
-
-                xOut(0) = zHeader
-                xOut(1) = zXML
-                xOut(2) = zXMLSign
-
-                Return True
-
-            Catch ex As Exception
-
-                zErr = "CreateSpotSigned:: " & ex.Message
-                Return False
-
-            End Try
-
-        End Function
-
-        Friend Function MakeP(ByVal sIn As String) As String
+        Friend Shared Function MakeP(ByVal sIn As String) As String
 
             Return Convert.ToBase64String(MakeLatin(sIn)).Replace("=", "%3d").Replace("+", "%2b").Replace("&", "%26").Replace$("/", "%2f").Trim
 
         End Function
 
-        Friend Function GetBinary(ByVal tPhuse As Phuse.Engine, ByVal Newsgroup As String, ByVal xMsgID As List(Of String), ByRef sxOut() As Byte, ByRef sError As String) As Boolean
+        Friend Shared Function GetBinary(ByVal tPhuse As Phuse.Engine, ByVal Newsgroup As String, ByVal xMsgID As List(Of String), ByRef sxOut() As Byte, ByRef sError As String) As Boolean
 
             Dim cNNTP As cNNTP
             Dim Retr As New StringBuilder
@@ -970,7 +919,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function GetRSA(ByVal TrustedKeys() As String) As RSACryptoServiceProvider()
+        Friend Shared Function GetRSA(ByVal TrustedKeys() As String) As RSACryptoServiceProvider()
 
             Dim BoundTrust As Integer = UBound(TrustedKeys)
             Dim RSAalg(BoundTrust) As RSACryptoServiceProvider
@@ -990,7 +939,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function MakeRSA(ByVal sModulus As String) As RSACryptoServiceProvider
+        Friend Shared Function MakeRSA(ByVal sModulus As String) As RSACryptoServiceProvider
 
             Dim cRSA As Security.Cryptography.RSACryptoServiceProvider = Nothing
 
@@ -1020,7 +969,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function IsEro(ByVal sVal As String) As Boolean
+        Friend Shared Function IsEro(ByVal sVal As String) As Boolean
 
             If sVal.Contains("d2") Then
                 If sVal.Contains("d23|") Then Return True
@@ -1042,7 +991,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function IsEbook(ByVal sVal As String) As Boolean
+        Friend Shared Function IsEbook(ByVal sVal As String) As Boolean
 
             If sVal.Contains("a5|") Then Return True
             If sVal.Contains("z2|") Then Return True
@@ -1051,7 +1000,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function IsTV(ByVal sVal As String) As Boolean
+        Friend Shared Function IsTV(ByVal sVal As String) As Boolean
 
             If sVal.Contains("b4|") Then Return True
             If sVal.Contains("d11|") Then Return True
@@ -1061,7 +1010,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function GetCode(ByVal sResponse As String) As Integer
+        Friend Shared Function GetCode(ByVal sResponse As String) As Integer
 
             Try
                 Return CInt(Val(Left(sResponse, 3)))
@@ -1071,14 +1020,14 @@ Namespace Spotlib
 
         End Function
 
-        Public Function ConvertToTimestamp(ByVal value As DateTime) As Integer
+        Public Shared Function ConvertToTimestamp(ByVal value As DateTime) As Integer
 
             Dim span As TimeSpan = (value - New DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime)
             Return CInt(span.TotalSeconds)
 
         End Function
 
-        Public Function GetFileSize(ByVal MyFilePath As String) As Long
+        Public Shared Function GetFileSize(ByVal MyFilePath As String) As Long
 
             If Not FileExists(MyFilePath) Then Return 0
 
@@ -1088,7 +1037,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Sub Wait(ByVal ms As Integer)
+        Public Shared Sub Wait(ByVal ms As Integer)
 
             Using wh As New ManualResetEvent(False)
                 wh.WaitOne(ms)
@@ -1096,7 +1045,7 @@ Namespace Spotlib
 
         End Sub
 
-        Public Function MakeMsg(ByVal sMes As String, Optional ByVal Tag As Boolean = True) As String
+        Public Shared Function MakeMsg(ByVal sMes As String, Optional ByVal Tag As Boolean = True) As String
 
             If sMes.Substring(0, 1) = "<" Then
                 If Tag Then Return sMes
@@ -1112,14 +1061,14 @@ Namespace Spotlib
 
         End Function
 
-        Private Function AddDirSep(ByVal strPathName As String) As String
+        Private Shared Function AddDirSep(ByVal strPathName As String) As String
 
             If Microsoft.VisualBasic.Right(Trim(strPathName), 1) <> "\" Then Return Trim(strPathName) & "\"
             Return Trim(strPathName)
 
         End Function
 
-        Public Function DirectoryExists(ByVal sDirName As String) As Boolean
+        Public Shared Function DirectoryExists(ByVal sDirName As String) As Boolean
 
             Try
                 Dim dDir As New DirectoryInfo(AddDirSep(sDirName))
@@ -1130,7 +1079,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function FileExists(ByVal sFilename As String) As Boolean
+        Public Shared Function FileExists(ByVal sFilename As String) As Boolean
 
             Try
                 If Len(sFilename) = 0 Then Return False
@@ -1142,7 +1091,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function HtmlEncode(ByVal text As String) As String
+        Public Shared Function HtmlEncode(ByVal text As String) As String
 
             If Len(text) = 0 Then Return ""
 
@@ -1169,7 +1118,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function HtmlDecode(ByVal text As String) As String
+        Public Shared Function HtmlDecode(ByVal text As String) As String
 
             If Len(text) = 0 Then Return ""
 
@@ -1177,20 +1126,20 @@ Namespace Spotlib
 
         End Function
 
-        Public Function SafeHref(ByVal Text As String) As String
+        Public Shared Function SafeHref(ByVal Text As String) As String
 
             Return AddHttp(Text).Replace(Chr(34), "%22").Replace("`", "%60").Replace("'", "%27")
 
         End Function
 
-        Public Function AddHttp(ByVal Text As String) As String
+        Public Shared Function AddHttp(ByVal Text As String) As String
 
             If Not HasHttp(Text) And Text.Length > 0 Then Return "http://" & Text
             Return Text
 
         End Function
 
-        Public Function HasHttp(ByVal Text As String) As Boolean
+        Public Shared Function HasHttp(ByVal Text As String) As Boolean
 
             If Text.IndexOf(":") > 1 Then
 
@@ -1205,7 +1154,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function URLEncode(ByVal Text As String) As String
+        Public Shared Function URLEncode(ByVal Text As String) As String
 
             Dim i As Integer
             Dim aCode As Integer
@@ -1239,7 +1188,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function SafeName(ByVal Text As String) As String
+        Public Shared Function SafeName(ByVal Text As String) As String
 
             Dim i As Integer
             Dim aCode As Integer
@@ -1280,7 +1229,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function URLDecode(ByVal StringToDecode As String) As String
+        Public Shared Function URLDecode(ByVal StringToDecode As String) As String
 
             Dim TempAns As String = ""
             Dim CurChr As Integer = 1
@@ -1302,7 +1251,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function CatDesc(ByVal hCat As Byte, Optional ByVal zCat As Byte = 0) As String
+        Public Shared Function CatDesc(ByVal hCat As Byte, Optional ByVal zCat As Byte = 0) As String
 
             Select Case hCat
 
@@ -1361,7 +1310,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function TranslateCat(ByVal hCat As Long, ByVal sCat As String, Optional ByVal bStrict As Boolean = False) As String
+        Public Shared Function TranslateCat(ByVal hCat As Long, ByVal sCat As String, Optional ByVal bStrict As Boolean = False) As String
 
             If sCat.Length < 2 Then Return ""
 
@@ -1774,7 +1723,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function TranslateCatDesc(ByVal hCat As Long, ByVal sCat As String) As String
+        Public Shared Function TranslateCatDesc(ByVal hCat As Long, ByVal sCat As String) As String
 
             Select Case hCat
                 Case 2
@@ -1814,7 +1763,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function TranslateCatShort(ByVal hCat As Integer, ByVal sCat As Integer) As String
+        Public Shared Function TranslateCatShort(ByVal hCat As Integer, ByVal sCat As Integer) As String
 
             Select Case hCat
 
@@ -1939,7 +1888,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function GetFileContents(ByVal FullPath As String, Optional ByRef ErrInfo As String = "") As String
+        Public Shared Function GetFileContents(ByVal FullPath As String, Optional ByRef ErrInfo As String = "") As String
 
             Dim strContents As String
             Dim objReader As StreamReader
@@ -1961,14 +1910,14 @@ Namespace Spotlib
 
         End Function
 
-        Public Function StripNonAlphaNumericCharacters(ByVal sText As String) As String
+        Public Shared Function StripNonAlphaNumericCharacters(ByVal sText As String) As String
 
             If Len(sText) = 0 Then Return ""
             Return System.Text.RegularExpressions.Regex.Replace(sText, "[^A-Za-z0-9]", "").Trim
 
         End Function
 
-        Private Function ConvertBytes(ByVal bytes As Long, ByVal convertTo As convTo) As Double
+        Private Shared Function ConvertBytes(ByVal bytes As Long, ByVal convertTo As convTo) As Double
 
             If convTo.IsDefined(GetType(convTo), convertTo) Then
 
@@ -1982,7 +1931,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function ConvertSize(ByVal fileSize As Long) As String
+        Public Shared Function ConvertSize(ByVal fileSize As Long) As String
 
             Dim sizeOfKB As Long = 1024              ' Actual size in bytes of 1KB
             Dim sizeOfMB As Long = 1048576           ' 1MB
@@ -2035,103 +1984,19 @@ Namespace Spotlib
 
         End Function
 
-        Public Function SettingsFolder() As String
-
-            Static TheResult As String = ""
-            Static DidOnce As Boolean = False
-
-            If Not DidOnce Then
-
-                DidOnce = True
-
-                Dim AddFolder As String = Spotname
-
-                If FileExists(AppPath() & "\settings.xml") Then
-
-                    TheResult = AppPath()
-
-                Else
-
-                    Dim Myfolder As String = ""
-
-                    Myfolder = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
-
-                    If Not DirectoryExists(Myfolder & "\" & AddFolder) Then
-                        If Directory.CreateDirectory(Myfolder & "\" & AddFolder) Is Nothing Then
-                            Foutje("Kan '" & Myfolder & "\" & AddFolder & "' niet aanmaken!")
-                        End If
-                    End If
-
-                    TheResult = Myfolder & "\" & AddFolder
-
-                End If
-            End If
-
-            Return TheResult
-
-        End Function
-
-        Public Sub Foutje(ByVal sMsg As String, Optional ByVal sCaption As String = "Error")
+        Public Shared Sub Foutje(ByVal sMsg As String, Optional ByVal sCaption As String = "Error")
 
             Throw New Exception(sCaption + ": " + sMsg)
 
         End Sub
 
-        Public Function GetFolder(ByVal pGuid As Guid) As String
-
-            Dim txtOldTmp As String = ""
-            Dim ptPath As IntPtr
-
-            If SHGetKnownFolderPath(pGuid, 0, IntPtr.Zero, ptPath) = 0 Then
-                txtOldTmp = System.Runtime.InteropServices.Marshal.PtrToStringUni(ptPath)
-                System.Runtime.InteropServices.Marshal.FreeCoTaskMem(ptPath)
-            End If
-
-            GetFolder = txtOldTmp
-
-        End Function
-
-        Public Function AppPath() As String
-
-            Static TheResult As String = ""
-            Static DidOnce As Boolean = False
-
-            If Not DidOnce Then
-
-                Try
-
-                    Throw New NotImplementedException()
-
-                    ''TheResult = System.Windows.Forms.Application.StartupPath
-                    DidOnce = True
-
-                Catch ex As Exception
-                    Foutje("AppPath")
-                End Try
-
-            End If
-
-            Return TheResult
-
-        End Function
-
-        Public Function MakeFilename(ByVal sIn As String) As String
+        Public Shared Function MakeFilename(ByVal sIn As String) As String
 
             Return sIn.Replace(Chr(34), "").Replace("*", "").Replace(":", "").Replace("<", "").Replace(">", "").Replace("?", "").Replace("\", "").Replace("/", "").Replace("|", "").Replace(".", "").Replace("%", "").Replace("[", "").Replace("]", "").Replace(";", "").Replace("=", "").Replace(",", "")
 
         End Function
 
-        Public Sub LaunchBrowser(ByVal sUrl As String)
-
-            Try
-                System.Diagnostics.Process.Start(sUrl)
-            Catch
-                Foutje("LaunchBrowser:: " & Err.Description)
-            End Try
-
-        End Sub
-
-        Private Function CreateHash(ByVal sLeft As String, ByVal sRight As String) As String
+        Private Shared Function CreateHash(ByVal sLeft As String, ByVal sRight As String) As String
 
             Dim RetBytes() As Byte
             Dim CharCnt As Integer = 62
@@ -2243,7 +2108,7 @@ Namespace Spotlib
 
         End Function
 
-        Private Function GetBaseChar(ByVal lIndex As Byte) As Byte
+        Private Shared Function GetBaseChar(ByVal lIndex As Byte) As Byte
 
             Select Case lIndex
                 Case 0 To 25
@@ -2258,7 +2123,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function sIIF(ByVal bExpression As Boolean, ByVal sTrue As String, ByVal sFalse As String) As String
+        Friend Shared Function sIIF(ByVal bExpression As Boolean, ByVal sTrue As String, ByVal sFalse As String) As String
 
             If bExpression Then
                 Return sTrue
@@ -2268,7 +2133,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function GetKey() As RSACryptoServiceProvider
+        Friend Shared Function GetKey() As RSACryptoServiceProvider
 
             Static cKey As RSACryptoServiceProvider
 
@@ -2287,52 +2152,13 @@ Namespace Spotlib
 
         End Function
 
-        Friend Function GetModulus() As String
+        Friend Shared Function GetModulus() As String
 
             Return Convert.ToBase64String(GetKey.ExportParameters(False).Modulus)
 
         End Function
 
-        Public Function CreateKeys() As Boolean
-
-            Dim sKey(10) As String
-
-            Try
-
-                If Not System.IO.File.Exists(SettingsFolder() & "\keys.xml") Then
-
-                    sKey(2) = "ys8WSlqonQMWT8ubG0tAA2Q07P36E+CJmb875wSR1XH7IFhEi0CCwlUzNqBFhC+P"
-                    sKey(3) = "uiyChPV23eguLAJNttC/o0nAsxXgdjtvUvidV2JL+hjNzc4Tc/PPo2JdYvsqUsat"
-                    sKey(4) = "1k6RNDVD6yBYWR6kHmwzmSud7JkNV4SMigBrs+jFgOK5Ldzwl17mKXJhl+su/GR9"
-
-                    Dim SK As New StreamWriter(SettingsFolder() & "\keys.xml", False, System.Text.Encoding.UTF8)
-
-                    SK.WriteLine("<Keys>")
-
-                    For Cl = 0 To 9
-                        If Len(sKey(Cl)) > 0 Then
-                            SK.WriteLine(vbTab & "<Key ID='" & Cl & "'>" & sKey(Cl) & "</Key>")
-                        End If
-                    Next
-
-                    SK.WriteLine("</Keys>")
-
-                    SK.Close()
-
-                End If
-
-            Catch ex As Exception
-
-                Foutje("Create_Keys: " & ex.Message)
-                Return False
-
-            End Try
-
-            Return True
-
-        End Function
-
-        Private Function DownloadString(ByVal zUrl As String, ByRef zError As String) As String
+        Private Shared Function DownloadString(ByVal zUrl As String, ByRef zError As String) As String
 
             Dim oWeb As System.Net.WebClient
 
@@ -2348,84 +2174,7 @@ Namespace Spotlib
 
         End Function
 
-        Private Function UpdateList(ByVal zUrl As String, ByVal sFile As String) As Boolean
-
-            Try
-
-                Dim sXml As String = DownloadString(zUrl, "")
-
-                If sXml Is Nothing Then Return False
-                If Len(sXml) = 0 Then Return False
-                If Not ValidList(sXml) Then Return False
-
-                Dim SK As New StreamWriter(SettingsFolder() & "\" & sFile, False, System.Text.Encoding.UTF8)
-                SK.Write(sXml)
-                SK.Close()
-
-                Return True
-
-            Catch
-            End Try
-
-            Return False
-
-        End Function
-
-        Friend Function ValidList(ByVal sXML As String) As Boolean
-
-            Try
-
-                Dim root As XmlElement
-                Dim doc As New XmlDocument
-
-                doc.XmlResolver = Nothing
-                doc.LoadXml(sXML)
-                root = doc.DocumentElement
-
-                If root.Name.ToLower <> "keys" Then
-                    Throw New Exception("XML Error")
-                End If
-
-                Return True
-
-            Catch
-            End Try
-
-            Return False
-
-        End Function
-
-        Private Function LoadList(ByVal sFile As String, ByVal ToList As HashSet(Of String)) As Boolean
-
-            Try
-
-                Dim root As XmlElement
-                Dim doc As New XmlDocument
-
-                doc.XmlResolver = Nothing
-                doc.Load(SettingsFolder() & "\" & sFile)
-                root = doc.DocumentElement
-
-                If root.Name.ToLower <> "keys" Then
-                    Throw New Exception("XML Error")
-                End If
-
-                For Each child2 As XmlElement In root
-                    ToList.Add(child2.InnerText)
-                Next
-
-                Return True
-
-            Catch ex As Exception
-                Throw New Exception("Load_List: " & ex.Message)
-
-            End Try
-
-            Return False
-
-        End Function
-
-        Public Function ReturnInfo(ByVal ExtCat As Integer) As String
+        Public Shared Function ReturnInfo(ByVal ExtCat As Integer) As String
 
             Dim FindCat As Char
             Dim sCat As String = CStr(CInt(ExtCat))
@@ -2448,7 +2197,7 @@ Namespace Spotlib
 
         End Function
 
-        Public Function TranslateInfo(ByVal hCat As Integer, ByVal sCats As String) As Byte
+        Public Shared Function TranslateInfo(ByVal hCat As Integer, ByVal sCats As String) As Byte
 
             Dim FindCat As Char
             Dim xInd As Byte = 0
@@ -2553,47 +2302,47 @@ Namespace Spotlib
 
         End Function
 
-        Public Function FindNZB(ByVal sName As String, ByVal sNewsGroup As String, ByVal sTitle As String) As String
+        'Public Shared Function FindNZB(ByVal sName As String, ByVal sNewsGroup As String, ByVal sTitle As String) As String
 
-            Dim ssNzb As String = ""
-            ''ssNzb = Spots.FindNZB(sName, 600, sNewsGroup, 999, True, False)
+        '    Dim ssNzb As String = ""
+        '    ''ssNzb = Spots.FindNZB(sName, 600, sNewsGroup, 999, True, False)
 
-            If (Len(ssNzb) = 0) Then
+        '    If (Len(ssNzb) = 0) Then
 
-                MsgBox("Kan NZB niet vinden, klik de bestandsnaam om handmatig te zoeken.", CType(MsgBoxStyle.Information + MsgBoxStyle.OkOnly, MsgBoxStyle), "NZB niet gevonden!")
-                Return vbNullString
+        '        MsgBox("Kan NZB niet vinden, klik de bestandsnaam om handmatig te zoeken.", CType(MsgBoxStyle.Information + MsgBoxStyle.OkOnly, MsgBoxStyle), "NZB niet gevonden!")
+        '        Return vbNullString
 
-            Else
+        '    Else
 
-                Dim TmpFile As String
-                Dim objReader As StreamWriter
+        '        Dim TmpFile As String
+        '        Dim objReader As StreamWriter
 
-                Dim sFile As String = Trim(MakeFilename(sTitle))
+        '        Dim sFile As String = Trim(MakeFilename(sTitle))
 
-                If sFile.Length > 0 Then
-                    TmpFile = (System.IO.Path.GetTempPath & sFile & ".nzb")
-                Else
-                    TmpFile = (System.IO.Path.GetTempFileName & ".nzb")
-                End If
+        '        If sFile.Length > 0 Then
+        '            TmpFile = (System.IO.Path.GetTempPath & sFile & ".nzb")
+        '        Else
+        '            TmpFile = (System.IO.Path.GetTempFileName & ".nzb")
+        '        End If
 
-                Try
-                    objReader = New StreamWriter(TmpFile, False, LatinEnc)
-                    objReader.Write(ssNzb)
-                    objReader.Close()
-                Catch Ex As Exception
-                    Foutje("Fout tijdens het schrijven.")
-                    Return vbNullString
-                End Try
+        '        Try
+        '            objReader = New StreamWriter(TmpFile, False, LatinEnc)
+        '            objReader.Write(ssNzb)
+        '            objReader.Close()
+        '        Catch Ex As Exception
+        '            Foutje("Fout tijdens het schrijven.")
+        '            Return vbNullString
+        '        End Try
 
-                Return TmpFile
+        '        Return TmpFile
 
-            End If
+        '    End If
 
-            Return vbNullString
+        '    Return vbNullString
 
-        End Function
+        'End Function
 
-        Public Function CreateMsgID(Optional ByVal sPrefix As String = "") As String
+        Public Shared Function CreateMsgID(Optional ByVal sPrefix As String = "") As String
 
             Dim ZL(7) As Byte
             Dim ZK As New Random
@@ -2615,7 +2364,7 @@ Namespace Spotlib
 
         End Function
 
-        Public ReadOnly Property LastPosition(ByVal db As Database, ByVal sTable As String) As Long
+        Public Shared ReadOnly Property LastPosition(ByVal db As Database, ByVal sTable As String) As Long
 
             Get
 
@@ -2642,94 +2391,7 @@ Namespace Spotlib
 
         End Property
 
-        Private Function AddToList(ByVal sName As String, ByVal sKey As String, ByVal sFile As String) As Boolean
-
-            Try
-
-                Dim root As XmlElement
-                Dim doc As New XmlDocument
-
-                doc.XmlResolver = Nothing
-                doc.Load(SettingsFolder() & "\" & sFile)
-                root = doc.DocumentElement
-
-                If root.Name.ToLower <> "keys" Then
-                    Throw New Exception("XML Error")
-                End If
-
-                For Each child2 As XmlElement In root
-                    If child2.InnerText.ToLower.Trim = sKey.ToLower.Trim Then
-                        Return True
-                    End If
-                Next
-
-                Dim NC As XmlNode = doc.CreateElement("Key")
-                Dim NA As XmlAttribute = doc.CreateAttribute("Name")
-
-                NA.Value = sName
-                NC.Attributes.Append(NA)
-                NC.InnerText = sKey
-
-                root.AppendChild(NC)
-
-                If FileExists(SettingsFolder() & "\" & sFile) Then
-                    System.IO.File.SetAttributes(SettingsFolder() & "\" & sFile, IO.FileAttributes.Normal)
-                End If
-
-                doc.Save(SettingsFolder() & "\" & sFile)
-
-                Return True
-
-            Catch
-            End Try
-
-            Return False
-
-        End Function
-
-        Private Function RemoveFromList(ByVal sKey As String, ByVal sFile As String) As Boolean
-
-            Try
-
-                Dim root As XmlElement
-                Dim doc As New XmlDocument
-                Dim bDidSome As Boolean = False
-
-                If Not FileExists(SettingsFolder() & "\" & sFile) Then Return False
-
-                doc.XmlResolver = Nothing
-                doc.Load(SettingsFolder() & "\" & sFile)
-                root = doc.DocumentElement
-
-                If root.Name.ToLower <> "keys" Then
-                    Throw New Exception("XML Error")
-                End If
-
-                For Each child2 As XmlElement In root
-                    If child2.InnerText.ToLower.Trim = sKey.ToLower.Trim Then
-                        bDidSome = True
-                        root.RemoveChild(child2)
-                    End If
-                Next
-
-                If Not bDidSome Then Return False
-
-                If FileExists(SettingsFolder() & "\" & sFile) Then
-                    System.IO.File.SetAttributes(SettingsFolder() & "\" & sFile, IO.FileAttributes.Normal)
-                End If
-
-                doc.Save(SettingsFolder() & "\" & sFile)
-
-                Return True
-
-            Catch
-            End Try
-
-            Return False
-
-        End Function
-
-        Friend Function MakeMD5(ByVal sModulus As String) As String
+        Friend Shared Function MakeMD5(ByVal sModulus As String) As String
 
             Static xMD5 As New MD5CryptoServiceProvider()
 
@@ -2752,7 +2414,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Sub ShowOnce(ByVal sMsg As String, ByVal sTitle As String)
+        Friend Shared Sub ShowOnce(ByVal sMsg As String, ByVal sTitle As String)
 
             Static DidList As New HashSet(Of String)
 
@@ -2762,13 +2424,13 @@ Namespace Spotlib
 
         End Sub
 
-        Friend Function IsSearchQuery(ByVal sQuery As String) As Boolean
+        Friend Shared Function IsSearchQuery(ByVal sQuery As String) As Boolean
 
             Dim sTest As String = sQuery.ToLower.Trim
             Return sTest.Contains(" match ")
 
         End Function
 
-    End Module
+    End Class
 
 End Namespace

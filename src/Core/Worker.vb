@@ -69,11 +69,11 @@ Namespace Spotlib
 
                     If .SelectSingleNode("Description") Is Nothing Then sError = "E1" : Return Nothing
 
-                    Lz.Body = HtmlDecode(Trim(.SelectSingleNode("Description").InnerText))
+                    Lz.Body = Utils.HtmlDecode(Trim(.SelectSingleNode("Description").InnerText))
 
                     If Not .SelectSingleNode("Image") Is Nothing Then
 
-                        Lz.Image = HtmlDecode(.SelectSingleNode("Image").InnerText)
+                        Lz.Image = Utils.HtmlDecode(.SelectSingleNode("Image").InnerText)
 
                         If bNative Then
                             With .SelectSingleNode("Image")
@@ -84,7 +84,7 @@ Namespace Spotlib
                                     Lz.ImageHeight = CInt(Val(.Attributes("Height").InnerText))
                                 End If
                                 For Each GN As XmlNode In .SelectNodes("Segment")
-                                    Lz.ImageID = MakeMsg(Trim(GN.InnerText), True)
+                                    Lz.ImageID = Utils.MakeMsg(Trim(GN.InnerText), True)
                                     Lz.Image = ""
                                     Exit For
                                 Next
@@ -93,7 +93,7 @@ Namespace Spotlib
 
                     End If
 
-                    If Not .SelectSingleNode("Website") Is Nothing Then Lz.Web = HtmlDecode(.SelectSingleNode("Website").InnerText)
+                    If Not .SelectSingleNode("Website") Is Nothing Then Lz.Web = Utils.HtmlDecode(.SelectSingleNode("Website").InnerText)
 
                     If Not bNative Then
 
@@ -124,12 +124,12 @@ Namespace Spotlib
                     If (Not bCheck) Or (Lz.KeyID = 1) Then Return Lz
 
                     If (Len(Lz.User.Signature) > 0) And (Len(Lz.User.Modulus) > 0) And (Len(Lz.MessageID) > 0) Then
-                        Lz.User.ValidSignature = CheckUserSignature(MakeMsg(Lz.MessageID), Lz.User.Signature, Lz.User.Modulus)
+                        Lz.User.ValidSignature = Utils.CheckUserSignature(Utils.MakeMsg(Lz.MessageID), Lz.User.Signature, Lz.User.Modulus)
                     End If
 
                     If Not Lz.User.ValidSignature Then
                         If (Len(Lz.User.Signature) > 0) And (Len(Lz.User.Modulus) > 0) And (Len(XmlSignature) > 0) Then
-                            Lz.User.ValidSignature = CheckUserSignature(XmlSignature, Lz.User.Signature, Lz.User.Modulus)
+                            Lz.User.ValidSignature = Utils.CheckUserSignature(XmlSignature, Lz.User.Signature, Lz.User.Modulus)
                         End If
                     End If
 
@@ -252,7 +252,7 @@ Namespace Spotlib
 
             Dim ShA As New SHA1Managed
             Dim CatzCol As New List(Of String)
-            Dim Span As TimeSpan = (DateTime.UtcNow - EPOCH)
+            Dim Span As TimeSpan = (DateTime.UtcNow - Utils.EPOCH)
             Dim MaxDate As Integer = CInt(Span.TotalSeconds) + DateOffset
             Dim cRSA As Security.Cryptography.RSACryptoServiceProvider = Nothing
 
@@ -337,7 +337,7 @@ Namespace Spotlib
                             If Catz.Length < 3 Then Continue For
                             If Catz.Length Mod 3 <> 0 Then Continue For
 
-                            zzT = SplitBySizEx(Catz, 3)
+                            zzT = Utils.SplitBySizEx(Catz, 3)
 
                             For Each rt As String In zzT
                                 If rt.Length > 0 Then
@@ -387,13 +387,13 @@ Namespace Spotlib
                         .SubCats = TempCat
 
                         If .Category = 1 Then
-                            If IsTV(.SubCats) Then
+                            If Utils.IsTV(.SubCats) Then
                                 .Category = 6
                             Else
-                                If IsEro(.SubCats) Then
+                                If Utils.IsEro(.SubCats) Then
                                     .Category = 9
                                 Else
-                                    If IsEbook(.SubCats) Then
+                                    If Utils.IsEbook(.SubCats) Then
                                         .Category = 5
                                     End If
                                 End If
@@ -402,7 +402,7 @@ Namespace Spotlib
 
                         If Segs(1).Contains("=?") Then
                             If Segs(1).Contains("?=") Then
-                                Segs(1) = Parse(Replace$(Trim$(Segs(1)), "?= =?", "?==?")).Replace(vbCr, "").Replace(vbLf, "")
+                                Segs(1) = Utils.Parse(Replace$(Trim$(Segs(1)), "?= =?", "?==?")).Replace(vbCr, "").Replace(vbLf, "")
                             End If
                         End If
 
@@ -420,7 +420,7 @@ Namespace Spotlib
                                 .Title = .Title.Replace(Chr(194), "?").Replace(Chr(195), "?")
                             Else
                                 '' Unicode error (alleen bij oude spots)
-                                .Title = Parse(UTFEncode(.Title)).Trim
+                                .Title = Utils.Parse(Utils.UTFEncode(.Title)).Trim
                             End If
                         End If
 
@@ -435,10 +435,10 @@ Namespace Spotlib
                             dPos = sModulus.IndexOf(".")
 
                             If dPos = -1 Then
-                                sModulus = FixPadding(UnSpecialString(sModulus))
+                                sModulus = Utils.FixPadding(Utils.UnSpecialString(sModulus))
                             Else
-                                sCheck = FixPadding(UnSpecialString(sModulus.Substring(dPos + 1)))
-                                sModulus = FixPadding(UnSpecialString(sModulus.Substring(0, dPos)))
+                                sCheck = Utils.FixPadding(Utils.UnSpecialString(sModulus.Substring(dPos + 1)))
+                                sModulus = Utils.FixPadding(Utils.UnSpecialString(sModulus.Substring(0, dPos)))
                             End If
 
                         End If
@@ -462,14 +462,14 @@ Namespace Spotlib
 
                                     If sCheck.Length > 0 Then
 
-                                        ShABytes = ShA.ComputeHash(MakeLatin(Segs(4)))
+                                        ShABytes = ShA.ComputeHash(Utils.MakeLatin(Segs(4)))
 
                                         If ShABytes(0) <> 0 Then Continue For
                                         If ShABytes(1) <> 0 Then Continue For
 
                                     End If
 
-                                    If Not RSA(.KeyID).VerifyHash(ShA.ComputeHash(MakeLatin(.Title & sHeader.Substring(0, sHeader.Length - sHeaderSign.Length - 1) & .Poster)), Nothing, Convert.FromBase64String(FixPadding(UnSpecialString(sHeaderSign)))) Then
+                                    If Not RSA(.KeyID).VerifyHash(ShA.ComputeHash(Utils.MakeLatin(.Title & sHeader.Substring(0, sHeader.Length - sHeaderSign.Length - 1) & .Poster)), Nothing, Convert.FromBase64String(Utils.FixPadding(Utils.UnSpecialString(sHeaderSign)))) Then
 
                                         Continue For
 
@@ -477,7 +477,7 @@ Namespace Spotlib
 
                                     If sCheck.Length > 0 Then
 
-                                        cRSA = MakeRSA(sModulus)
+                                        cRSA = Utils.MakeRSA(sModulus)
 
                                         If cRSA Is Nothing Then Continue For
 
@@ -491,7 +491,7 @@ Namespace Spotlib
 
                                     If Not RSA(7) Is Nothing Then Continue For
 
-                                    ShABytes = ShA.ComputeHash(MakeLatin(Segs(4)))
+                                    ShABytes = ShA.ComputeHash(Utils.MakeLatin(Segs(4)))
 
                                     If ShABytes(0) <> 0 Then Continue For
                                     If ShABytes(1) <> 0 Then Continue For
@@ -502,7 +502,7 @@ Namespace Spotlib
 
                                     Else
 
-                                        cRSA = MakeRSA(sModulus)
+                                        cRSA = Utils.MakeRSA(sModulus)
 
                                         If cRSA Is Nothing Then Continue For
 
@@ -512,7 +512,7 @@ Namespace Spotlib
 
                                         Else
 
-                                            If Not cRSA.VerifyHash(ShA.ComputeHash(MakeLatin(.Title & sHeader.Substring(0, sHeader.Length - sHeaderSign.Length - 1) & .Poster)), Nothing, Convert.FromBase64String(FixPadding(UnSpecialString(sHeaderSign)))) Then Continue For
+                                            If Not cRSA.VerifyHash(ShA.ComputeHash(Utils.MakeLatin(.Title & sHeader.Substring(0, sHeader.Length - sHeaderSign.Length - 1) & .Poster)), Nothing, Convert.FromBase64String(Utils.FixPadding(Utils.UnSpecialString(sHeaderSign)))) Then Continue For
 
                                         End If
 

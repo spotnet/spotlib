@@ -141,7 +141,7 @@ Namespace Spotlib
                 End If
 
                 bNew = (xParam.Position < 1)
-                SetP(0, "Zoeken naar " & sIIF(bNew, "nieuwe ", "") & "spots...", asyncOp)
+                SetP(0, "Zoeken naar " & Utils.sIIF(bNew, "nieuwe ", "") & "spots...", asyncOp)
 
                 Dim TotalSize As Long = 0
                 Dim SpeedWatch As New Stopwatch
@@ -171,7 +171,7 @@ Namespace Spotlib
                 WorkCnt = 0
                 SUbTotal = 0
 
-                WorkLoad = CreateWork(lFirst, lLast)
+                WorkLoad = Utils.CreateWork(lFirst, lLast)
 
                 WorkTotal = WorkLoad.Count
                 WorkCounter = WorkTotal
@@ -194,7 +194,7 @@ Namespace Spotlib
                     End If
 
                     If MustCancel(asyncOp) Then
-                        iCompleted(True, xParam, CancelMSG, asyncOp)
+                        iCompleted(True, xParam, Utils.CancelMSG, asyncOp)
                         Exit Sub
                     End If
 
@@ -286,7 +286,7 @@ Namespace Spotlib
             If StopFlag Then Exit Sub
 
             If MustCancel(asyncOp) Then
-                iCompleted(True, xParam, CancelMSG, asyncOp)
+                iCompleted(True, xParam, Utils.CancelMSG, asyncOp)
                 Exit Sub
             End If
 
@@ -312,9 +312,9 @@ Namespace Spotlib
                 ProgressValue = CInt((100 / WorkTotal) * (WorkTotal - WorkCounter))
 
                 If WorkCnt < 1 Then
-                    SetP(0, "Zoeken naar " & sIIF(bNew, "nieuwe ", "") & "spots..." & LastSpeed, asyncOp) '' (totaal " & FormatLong2(SUbTotal) & ").")
+                    SetP(0, "Zoeken naar " & Utils.sIIF(bNew, "nieuwe ", "") & "spots..." & LastSpeed, asyncOp) '' (totaal " & FormatLong2(SUbTotal) & ").")
                 Else
-                    SetP(ProgressValue, FormatLong(WorkCnt) & " " & sIIF(bNew, "nieuwe ", "") & "spots gevonden" & LastSpeed, asyncOp) '' (totaal " & FormatLong2(SUbTotal) & ").")
+                    SetP(ProgressValue, Utils.FormatLong(WorkCnt) & " " & Utils.sIIF(bNew, "nieuwe ", "") & "spots gevonden" & LastSpeed, asyncOp) '' (totaal " & FormatLong2(SUbTotal) & ").")
                 End If
 
             End If
@@ -384,7 +384,7 @@ Namespace Spotlib
                                                         If UBound(sCmd) < 1 Then Continue For
                                                         If Len(sCmd(1)) < 1 Then Continue For
 
-                                                        TheDeletes.Add(MakeMsg(sCmd(1), False))
+                                                        TheDeletes.Add(Utils.MakeMsg(sCmd(1), False))
 
                                                 End Select
 
