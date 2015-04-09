@@ -171,7 +171,7 @@ Namespace Spotlib
                 WorkCnt = 0
                 SUbTotal = 0
 
-                WorkLoad = Spotz.CreateWork(lFirst, lLast)
+                WorkLoad = Spotz.CreateWork(lFirst, lLast, 100000)
 
                 WorkTotal = WorkLoad.Count
                 WorkCounter = WorkTotal
