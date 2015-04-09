@@ -50,7 +50,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DataVirtualization">
-      <HintPath>Vendor\DataVirtualization.dll</HintPath>
+      <HintPath>Vendor\VirtualData.dll</HintPath>
     </Reference>
     <Reference Include="Fusenet">
       <HintPath>Vendor\Fusenet.dll</HintPath>
