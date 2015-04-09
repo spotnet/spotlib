@@ -584,7 +584,7 @@ Namespace Spotlib
 
         End Function
 
-        Friend Shared Function CreateWork(ByVal sFirst As Long, ByVal sLast As Long) As List(Of NNTPWork)
+        Friend Shared Function CreateWork(ByVal sFirst As Long, ByVal sLast As Long, ByVal sMax As Long) As List(Of NNTPWork)
 
             Dim xWork As NNTPWork
             Dim WorkCol As New List(Of NNTPWork)
@@ -600,7 +600,16 @@ Namespace Spotlib
 
             TotalMSG = (sLast - sFirst) + 1
 
-            If TotalMSG < 1 Then Return New List(Of NNTPWork)
+            If TotalMSG > sMax Then
+            
+                TotalMSG = sMax
+                sLast = sFirst + (sMax - 1)
+            
+            Else
+            
+                If TotalMSG < 1 Then Return New List(Of NNTPWork)
+                
+            End If
 
             If TotalMSG > FastPacket Then
                 FastPos = sFirst + (TotalMSG - FastPacket)
