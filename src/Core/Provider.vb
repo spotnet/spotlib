@@ -3,6 +3,7 @@ Imports System.Data.Common
 Imports DataVirtualization
 Imports System.Diagnostics
 
+
 Namespace Spotlib
     Public Class SpotProvider
 
@@ -26,6 +27,9 @@ Namespace Spotlib
 
         Private _SortOrder As String = "asc"
         Private _SortColumn As String = "rowid"
+
+        Public Parms As iWorkParams
+
 
         Public Property SortOrder() As String
             Get
@@ -161,13 +165,15 @@ Namespace Spotlib
 
                 Debug.Print("LoadRange: " & CStr(startIndex))
 
-                Dim MaxResults As Integer = 5000 '' TODO: CInt(Param.MaxResults)
+
+                Dim MaxResults As Integer = CInt(Parms.MaxResults)
+
                 If MaxResults <= 0 Then MaxResults = -1 ' Oude setting
 
                 If CacheQueryCount < 1 Then
                     CacheQueryCount = -1
                     If ((_RowFilter = Spotz.DefaultFilter) Or (Len(_RowFilter) = 0)) Then
-                        CacheQueryCount = 999999999 '' TODO: CInt(Param.DatabaseFilter)
+                        CacheQueryCount = CInt(Parms.DatabaseFilter)
                     End If
                 End If
 
@@ -194,12 +200,12 @@ Namespace Spotlib
 
                 Dim sQ As String
 
-                Throw New NotImplementedException()
+                'Throw New NotImplementedException()
 
                 If Not Spots.IsSearchQuery(_RowFilter) Then
-                    sQ = CreateQuery("asc", "rowid", MaxResults, sOffset, CountQuery)
+                    sQ = CreateQuery(SortOrder, SortCol, MaxResults, sOffset, CountQuery)
                 Else
-                    sQ = CreateSearchQuery(0, "asc", "rowid", MaxResults, sOffset, CountQuery)
+                    sQ = CreateSearchQuery(Parms.DatabaseMax, SortOrder, SortCol, MaxResults, sOffset, CountQuery)
                 End If
 
                 lPosIndex = 4
@@ -338,6 +344,13 @@ Namespace Spotlib
             End If
 
             If sQ.Contains("[SN:DATE]") Then sQ = Strings.Replace(sQ, "[SN:DATE]", CStr(fDate()), 1, , CompareMethod.Binary)
+            If sQ.Contains("[SN:NEW]") Then
+                If _RowNew > 1 Then
+                    sQ = Strings.Replace(sQ, "[SN:NEW]", Convert.ToString(_RowNew), 1, , CompareMethod.Binary)
+                Else
+                    sQ = Strings.Replace(sQ, "[SN:NEW]", Convert.ToString(Parms.DatabaseMax + 1), 1, , CompareMethod.Binary)
+                End If
+            End If
 
             Dim SelectID As String = "rowid"
             Dim SelectTable As String = "spots"
@@ -361,7 +374,7 @@ Namespace Spotlib
             If (MaxResults < 1) Or (SortCol = "rowid" And SortOrder.ToLower = "desc") Then
                 sQ = sPrefix & SelectTable & sQ & RowSort & sOffset
             Else
-                sQ = sPrefix & SelectTable & " WHERE " & SelectID & " IN (SELECT " & SelectID & " FROM " & SelectTable & sQ & " ORDER BY " & SelectID & " DESC" & " LIMIT " & MaxResults & ") " & RowSort & sOffset
+                sQ = sPrefix & SelectTable & " WHERE " & SelectID & " IN (SELECT " & SelectID & " FROM " & SelectTable & sQ & " ORDER BY " & SelectID & " DESC LIMIT " & MaxResults & ") " & RowSort & sOffset
             End If
 
             Debug.Print("SQL Query: " & sQ)
