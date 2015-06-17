@@ -4,9 +4,9 @@ Imports System.Reflection
 <Assembly: AssemblyTitle("Spotlib")>
 <Assembly: AssemblyDescription("Library for Spotnet")>
 <Assembly: AssemblyProduct("Spotlib")>
-<Assembly: AssemblyVersion("1.8.5.0")> 
+<Assembly: AssemblyVersion("1.8.4.3")> 
 <Assembly: Guid("3A541D6D-6B12-4418-9F42-B26806F658B6")>
-<Assembly: AssemblyFileVersion("1.8.5.0")> 
+<Assembly: AssemblyFileVersion("1.8.4.3")> 
 <Assembly: AssemblyCopyright("All Rights Reversed")>
 'Imports System
 'Imports System.Reflection
