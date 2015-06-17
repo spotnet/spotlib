@@ -207,7 +207,7 @@ Namespace Spotlib
 
                 End If
 
-                WorkLoad = Spotz.CreateWork(lFirst, lLast)
+                WorkLoad = Spotz.CreateWork(lFirst, lLast, 100000)
                 WorkTotal = WorkLoad.Count
 
                 If WorkTotal < 1 Then
